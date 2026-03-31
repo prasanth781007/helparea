@@ -1,0 +1,3572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>HelpArea – Empowering Tribal India</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600;700&family=Yatra+One&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --clay: #bf4e1a;
+            --clay2: #e0622a;
+            --clay3: #f0845a;
+            --soil: #3d1f0d;
+            --soil2: #5c2e12;
+            --gold: #c9963a;
+            --gold2: #e8b86d;
+            --gold3: #f5d9a8;
+            --sand: #f8f0e4;
+            --cream: #fdfaf5;
+            --rust: #8b2e0d;
+            --ink: #1a0e06;
+            --ink2: #3d2010;
+            --ink3: #6b4c34;
+            --white: #fff;
+            --ff-d: 'Cormorant Garamond', serif;
+            --ff-t: 'Yatra One', cursive;
+            --ff-b: 'Outfit', sans-serif;
+            --ease: cubic-bezier(.4, 0, .2, 1);
+            --r: 14px;
+            --r2: 8px;
+            --sh: 0 8px 32px rgba(61, 31, 13, .13);
+            --sh2: 0 20px 60px rgba(61, 31, 13, .22);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased
+        }
+
+        html,
+        body {
+            font-family: var(--ff-b);
+            background: var(--cream);
+            color: var(--ink);
+            overflow-x: hidden;
+            width: 100%;
+            line-height: 1.7;
+            cursor: none;
+            -webkit-overflow-scrolling: touch;
+            position: relative
+        }
+
+        body.locked {
+            overflow: hidden
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+            object-fit: cover
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit
+        }
+
+        ul {
+            list-style: none
+        }
+
+        input,
+        textarea,
+        select,
+        button {
+            font-family: inherit;
+            outline: none
+        }
+
+        ::selection {
+            background: var(--clay);
+            color: var(--white)
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--sand)
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--clay);
+            border-radius: 3px
+        }
+
+        /* ── CURSOR ── */
+        #cur,
+        #cur-ring {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%)
+        }
+
+        #cur {
+            width: 10px;
+            height: 10px;
+            background: var(--clay);
+            transition: width .3s, height .3s, background .3s;
+            mix-blend-mode: multiply
+        }
+
+        #cur-ring {
+            width: 34px;
+            height: 34px;
+            border: 1.5px solid var(--clay);
+            transition: width .3s, height .3s, border-color .3s;
+            transition-timing-function: var(--ease)
+        }
+
+        body.grow #cur {
+            width: 18px;
+            height: 18px;
+            background: var(--gold)
+        }
+
+        body.grow #cur-ring {
+            width: 54px;
+            height: 54px;
+            border-color: var(--gold);
+            opacity: .5
+        }
+
+        /* ── PRELOADER ── */
+        #pre {
+            position: fixed;
+            inset: 0;
+            z-index: 99990;
+            background: var(--soil);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            transition: opacity .8s, visibility .8s
+        }
+
+        #pre.gone {
+            opacity: 0;
+            visibility: hidden
+        }
+
+        .pre-logo {
+            font-family: var(--ff-t);
+            font-size: 2.4rem;
+            color: var(--gold2);
+            animation: pp 1.4s ease infinite
+        }
+
+        .pre-bar {
+            width: 180px;
+            height: 2px;
+            background: rgba(255, 255, 255, .12);
+            border-radius: 2px;
+            overflow: hidden
+        }
+
+        .pre-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--clay), var(--gold));
+            width: 0;
+            animation: pf 2.2s ease forwards
+        }
+
+        .pre-lbl {
+            font-size: .72rem;
+            letter-spacing: .22em;
+            color: rgba(255, 255, 255, .35);
+            text-transform: uppercase;
+            font-weight: 300
+        }
+
+        @keyframes pp {
+
+            0%,
+            100% {
+                opacity: .6
+            }
+
+            50% {
+                opacity: 1
+            }
+        }
+
+        @keyframes pf {
+            to {
+                width: 100%
+            }
+        }
+
+        /* ── PROGRESS ── */
+        #prog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            z-index: 9998;
+            background: linear-gradient(90deg, var(--clay), var(--gold), var(--clay2));
+            background-size: 200%;
+            width: 0;
+            box-shadow: 0 0 10px rgba(191, 78, 26, .5)
+        }
+
+        /* ── CONTAINER ── */
+        .ctr {
+            width: min(1200px, 93%);
+            margin: 0 auto
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .6rem;
+            padding: .88rem 2.2rem;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: .9rem;
+            cursor: none;
+            border: 2px solid transparent;
+            transition: all .4s var(--ease);
+            letter-spacing: .07em;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, .09);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .4s var(--ease)
+        }
+
+        .btn:hover::after {
+            transform: scaleX(1)
+        }
+
+        .btn-p {
+            background: var(--clay);
+            color: var(--white);
+            border-color: var(--clay)
+        }
+
+        .btn-p:hover {
+            background: var(--rust);
+            border-color: var(--rust);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(191, 78, 26, .38)
+        }
+
+        .btn-o {
+            background: transparent;
+            color: var(--white);
+            border-color: rgba(255, 255, 255, .55)
+        }
+
+        .btn-o:hover {
+            background: rgba(255, 255, 255, .1);
+            border-color: var(--white)
+        }
+
+        .btn-g {
+            background: var(--gold);
+            color: var(--soil);
+            border-color: var(--gold)
+        }
+
+        .btn-g:hover {
+            background: var(--gold2);
+            border-color: var(--gold2);
+            transform: translateY(-2px)
+        }
+
+        .btn-gh {
+            background: transparent;
+            color: var(--clay);
+            border-color: var(--clay)
+        }
+
+        .btn-gh:hover {
+            background: var(--clay);
+            color: var(--white)
+        }
+
+        .btn-fw {
+            width: 100%
+        }
+
+        /* ── TYPE ── */
+        .lbl {
+            display: inline-block;
+            font-size: .7rem;
+            font-weight: 600;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--clay);
+            margin-bottom: .6rem
+        }
+
+        .lbl.lt {
+            color: var(--gold2)
+        }
+
+        .lbl.gd {
+            color: var(--gold)
+        }
+
+        .h2 {
+            font-family: var(--ff-d);
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            font-weight: 600;
+            line-height: 1.12;
+            letter-spacing: -.01em;
+            color: var(--ink)
+        }
+
+        .h2.lt {
+            color: var(--white)
+        }
+
+        .h3 {
+            font-family: var(--ff-d);
+            font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+            font-weight: 600;
+            color: var(--ink)
+        }
+
+        .sec {
+            text-align: center;
+            margin-bottom: 4rem
+        }
+
+        .orn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.1rem
+        }
+
+        .orn span {
+            color: var(--clay)
+        }
+
+        .orn::before,
+        .orn::after {
+            content: '';
+            flex: 1;
+            max-width: 80px;
+            height: 1px
+        }
+
+        .orn::before {
+            background: linear-gradient(90deg, transparent, var(--gold))
+        }
+
+        .orn::after {
+            background: linear-gradient(90deg, var(--gold), transparent)
+        }
+
+        section {
+            padding: 7rem 0
+        }
+
+        /* ── REVEAL ── */
+        [data-r] {
+            opacity: 0;
+            transform: translateY(36px);
+            transition: opacity .75s var(--ease), transform .75s var(--ease)
+        }
+
+        [data-r="l"] {
+            transform: translateX(-36px)
+        }
+
+        [data-r="r"] {
+            transform: translateX(36px)
+        }
+
+        [data-r="s"] {
+            transform: scale(.94)
+        }
+
+        [data-r].vis {
+            opacity: 1;
+            transform: none
+        }
+
+        /* ══════════ NAVBAR ══════════ */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.1rem 0;
+            transition: all .5s var(--ease)
+        }
+
+        .nav.solid {
+            background: rgba(26, 14, 6, .96);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 1px 0 rgba(255, 255, 255, .05);
+            padding: .65rem 0
+        }
+
+        .nw {
+            width: min(1200px, 93%);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            color: var(--white)
+        }
+
+        .bi {
+            width: 38px;
+            height: 38px;
+            background: var(--clay);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--ff-t);
+            font-size: 1rem;
+            color: var(--white);
+            flex-shrink: 0
+        }
+
+        .bn {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1
+        }
+
+        .bn b {
+            font-family: var(--ff-d);
+            font-size: 1.18rem;
+            font-weight: 600;
+            letter-spacing: .02em
+        }
+
+        .bn small {
+            font-size: .62rem;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--gold2);
+            font-weight: 400
+        }
+
+        .nlinks {
+            display: flex;
+            align-items: center;
+            gap: 2.2rem
+        }
+
+        .nl {
+            color: rgba(255, 255, 255, .72);
+            font-size: .85rem;
+            font-weight: 500;
+            letter-spacing: .07em;
+            text-transform: uppercase;
+            position: relative;
+            transition: color .3s;
+            cursor: none
+        }
+
+        .nl::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width .35s var(--ease)
+        }
+
+        .nl:hover,
+        .nl.on {
+            color: var(--gold)
+        }
+
+        .nl:hover::after,
+        .nl.on::after {
+            width: 100%
+        }
+
+        .ndonate {
+            background: var(--clay);
+            color: var(--white);
+            padding: .52rem 1.35rem;
+            border-radius: 3px;
+            font-size: .8rem;
+            font-weight: 600;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            transition: all .3s;
+            cursor: none
+        }
+
+        .ndonate:hover {
+            background: var(--rust);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(191, 78, 26, .4)
+        }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: none;
+            padding: 5px
+        }
+
+        .burger span {
+            display: block;
+            width: 24px;
+            height: 1.5px;
+            background: var(--white);
+            transition: all .35s var(--ease)
+        }
+
+        .burger.on span:nth-child(1) {
+            transform: translateY(6.5px) rotate(45deg)
+        }
+
+        .burger.on span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0)
+        }
+
+        .burger.on span:nth-child(3) {
+            transform: translateY(-6.5px) rotate(-45deg)
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: min(300px, 82vw);
+            height: 100vh;
+            background: var(--soil);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            padding: 5.5rem 2.5rem 3rem;
+            gap: 1.8rem;
+            transition: right .45s var(--ease);
+            box-shadow: -8px 0 40px rgba(0, 0, 0, .4)
+        }
+
+        .drawer.on {
+            right: 0
+        }
+
+        .drawer .nl {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, .8)
+        }
+
+        .dov {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            z-index: 998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .4s
+        }
+
+        .dov.on {
+            opacity: 1;
+            pointer-events: all
+        }
+
+        /* ══════════ HERO ══════════ */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden
+        }
+
+        .hbg {
+            position: absolute;
+            inset: 0;
+            z-index: 0
+        }
+
+        .hbg img {
+            width: 100%;
+            height: 100%;
+            object-position: 55% center
+        }
+
+        .hbg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(108deg, rgba(26, 14, 6, .92) 0%, rgba(26, 14, 6, .62) 48%, rgba(26, 14, 6, .22) 100%)
+        }
+
+        .hgrain {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            opacity: .035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 220px;
+            pointer-events: none
+        }
+
+        .hbody {
+            position: relative;
+            z-index: 2;
+            max-width: 680px;
+            margin-left: max(4vw, calc((100vw - 1200px)/2));
+            padding: 2rem 0
+        }
+
+        .hpill {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .18);
+            backdrop-filter: blur(10px);
+            color: var(--gold2);
+            font-size: .7rem;
+            font-weight: 500;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            padding: .42rem 1rem;
+            border-radius: 50px;
+            margin-bottom: 1.8rem;
+            animation: fu .9s .2s both
+        }
+
+        .hpdot {
+            width: 6px;
+            height: 6px;
+            background: var(--clay2);
+            border-radius: 50%;
+            animation: bk 1.5s ease infinite
+        }
+
+        @keyframes bk {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .25
+            }
+        }
+
+        .hh1 {
+            font-family: var(--ff-d);
+            font-size: clamp(3rem, 6.5vw, 5.2rem);
+            font-weight: 300;
+            color: var(--white);
+            line-height: 1.06;
+            letter-spacing: -.025em;
+            margin-bottom: 1.3rem;
+            animation: fu .9s .35s both
+        }
+
+        .hh1 strong {
+            font-weight: 700;
+            font-style: italic;
+            color: var(--gold2)
+        }
+
+        .hsub {
+            font-size: 1.02rem;
+            color: rgba(255, 255, 255, .7);
+            margin-bottom: 2.4rem;
+            font-weight: 300;
+            max-width: 480px;
+            animation: fu .9s .5s both
+        }
+
+        .hact {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            animation: fu .9s .65s both
+        }
+
+        .hscr {
+            position: absolute;
+            bottom: 2.5rem;
+            left: max(4vw, calc((100vw - 1200px)/2));
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            color: rgba(255, 255, 255, .4);
+            font-size: .68rem;
+            letter-spacing: .14em;
+            text-transform: uppercase
+        }
+
+        .sct {
+            width: 40px;
+            height: 1px;
+            background: rgba(255, 255, 255, .22);
+            position: relative;
+            overflow: hidden
+        }
+
+        .scd {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 1px;
+            background: var(--gold);
+            animation: sm 2s ease infinite
+        }
+
+        @keyframes sm {
+            0% {
+                left: 0;
+                opacity: 1
+            }
+
+            100% {
+                left: 100%;
+                opacity: 0
+            }
+        }
+
+        .hstats {
+            position: absolute;
+            bottom: 2.5rem;
+            right: max(4vw, calc((100vw - 1200px)/2));
+            z-index: 2;
+            display: flex;
+            gap: 2.5rem
+        }
+
+        .hs {
+            text-align: right
+        }
+
+        .hs-n {
+            font-family: var(--ff-d);
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1
+        }
+
+        .hs-l {
+            font-size: .66rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .4);
+            margin-top: .25rem
+        }
+
+        @keyframes fu {
+            from {
+                opacity: 0;
+                transform: translateY(26px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        /* ══════════ MARQUEE ══════════ */
+        .mstrip {
+            background: var(--clay);
+            overflow: hidden;
+            padding: .82rem 0;
+            position: relative;
+            z-index: 10
+        }
+
+        .mtrack {
+            display: flex;
+            gap: 3rem;
+            width: max-content;
+            animation: mr 28s linear infinite
+        }
+
+        .mstrip:hover .mtrack {
+            animation-play-state: paused
+        }
+
+        .mi {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            white-space: nowrap;
+            font-size: .76rem;
+            font-weight: 600;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .82)
+        }
+
+        .mi span {
+            color: var(--gold2)
+        }
+
+        @keyframes mr {
+            to {
+                transform: translateX(-50%)
+            }
+        }
+
+        /* ══════════ ABOUT ══════════ */
+        .about {
+            background: var(--cream);
+            padding: 8rem 0
+        }
+
+        .ag {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center
+        }
+
+        .avis {
+            position: relative
+        }
+
+        .aiw {
+            position: relative;
+            border-radius: var(--r);
+            overflow: hidden;
+            box-shadow: var(--sh2)
+        }
+
+        .aiw img {
+            height: 520px;
+            width: 100%
+        }
+
+        .aiw::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(to top, rgba(26, 14, 6, .35) 0%, transparent 50%)
+        }
+
+        .afloat {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            z-index: 2;
+            background: var(--white);
+            border-radius: var(--r);
+            padding: 1.5rem;
+            box-shadow: var(--sh2);
+            border: 1px solid rgba(201, 150, 58, .2);
+            min-width: 190px
+        }
+
+        .afn {
+            font-family: var(--ff-d);
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--clay);
+            line-height: 1
+        }
+
+        .afl {
+            font-size: .78rem;
+            color: var(--ink3);
+            margin-top: .3rem;
+            font-weight: 500
+        }
+
+        .aframe {
+            position: absolute;
+            top: -16px;
+            left: -16px;
+            width: 68%;
+            height: 68%;
+            border: 2px solid var(--gold3);
+            border-radius: var(--r);
+            z-index: -1;
+            pointer-events: none
+        }
+
+        .at .h2 {
+            margin-bottom: 1.1rem
+        }
+
+        .orn-l {
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            margin: 1.1rem 0
+        }
+
+        .orn-l::after {
+            content: '';
+            flex: 1;
+            max-width: 55px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--gold), transparent)
+        }
+
+        .orn-l span {
+            font-size: .9rem;
+            color: var(--clay)
+        }
+
+        .at p {
+            color: var(--ink3);
+            margin-bottom: .9rem;
+            font-size: .98rem;
+            font-weight: 300
+        }
+
+        .pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .6rem;
+            margin: 1.4rem 0
+        }
+
+        .pill {
+            padding: .38rem .88rem;
+            border-radius: 50px;
+            font-size: .76rem;
+            font-weight: 500;
+            background: var(--sand);
+            color: var(--ink2);
+            border: 1px solid rgba(201, 150, 58, .22);
+            transition: all .3s;
+            cursor: default
+        }
+
+        .pill:hover {
+            background: var(--clay);
+            color: var(--white);
+            border-color: var(--clay)
+        }
+
+        /* ══════════ PROGRAMS ══════════ */
+        .programs {
+            background: var(--sand);
+            padding: 7rem 0
+        }
+
+        .pg {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem
+        }
+
+        .pc {
+            background: var(--white);
+            border-radius: var(--r);
+            overflow: hidden;
+            border: 1px solid rgba(201, 150, 58, .14);
+            transition: all .45s var(--ease);
+            display: flex;
+            flex-direction: column
+        }
+
+        .pc:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--sh2);
+            border-color: rgba(191, 78, 26, .2)
+        }
+
+        .pimg {
+            height: 196px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .pimg img {
+            width: 100%;
+            height: 100%;
+            transition: transform .6s var(--ease)
+        }
+
+        .pc:hover .pimg img {
+            transform: scale(1.08)
+        }
+
+        .pov {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(26, 14, 6, .68) 0%, transparent 58%)
+        }
+
+        .piw {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: var(--clay);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem
+        }
+
+        .pb {
+            padding: 1.7rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column
+        }
+
+        .ptag {
+            font-size: .68rem;
+            font-weight: 600;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--clay);
+            margin-bottom: .45rem
+        }
+
+        .pb .h3 {
+            margin-bottom: .7rem;
+            font-size: 1.25rem
+        }
+
+        .pb p {
+            color: var(--ink3);
+            font-size: .91rem;
+            font-weight: 300;
+            flex: 1
+        }
+
+        .plink {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            margin-top: 1.1rem;
+            font-size: .8rem;
+            font-weight: 600;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--clay);
+            transition: gap .3s;
+            cursor: none
+        }
+
+        .plink:hover {
+            gap: .9rem
+        }
+
+        /* ══════════ IMPACT ══════════ */
+        .impact {
+            position: relative;
+            padding: 7rem 0;
+            overflow: hidden;
+            background: var(--soil)
+        }
+
+        .impact::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 80% at 15% 50%, rgba(191, 78, 26, .18) 0%, transparent 70%), radial-gradient(ellipse 50% 60% at 85% 40%, rgba(201, 150, 58, .12) 0%, transparent 70%)
+        }
+
+        .ipat {
+            position: absolute;
+            inset: 0;
+            opacity: .035;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 255, 255, .3) 39px, rgba(255, 255, 255, .3) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 255, 255, .3) 39px, rgba(255, 255, 255, .3) 40px)
+        }
+
+        .igrid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            position: relative;
+            z-index: 1
+        }
+
+        .ic {
+            text-align: center;
+            padding: 2.6rem 1.4rem;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--r);
+            transition: all .4s var(--ease);
+            position: relative;
+            overflow: hidden
+        }
+
+        .ic::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(191, 78, 26, .1) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity .4s
+        }
+
+        .ic:hover {
+            transform: translateY(-6px);
+            border-color: rgba(201, 150, 58, .25);
+            background: rgba(255, 255, 255, .07)
+        }
+
+        .ic:hover::before {
+            opacity: 1
+        }
+
+        .ic-ico {
+            font-size: 2.1rem;
+            margin-bottom: 1.1rem;
+            display: block
+        }
+
+        .ic-v {
+            font-family: var(--ff-d);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold2);
+            display: inline;
+            line-height: 1
+        }
+
+        .ic-s {
+            font-family: var(--ff-d);
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: var(--clay2);
+            display: inline
+        }
+
+        .ic-l {
+            color: rgba(255, 255, 255, .58);
+            font-size: .86rem;
+            margin-top: .7rem;
+            font-weight: 300
+        }
+
+        /* ══════════ TESTIMONIALS ══════════ */
+        .testi {
+            background: var(--cream);
+            padding: 7rem 0
+        }
+
+        .tg {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem
+        }
+
+        .tc {
+            background: var(--white);
+            border-radius: var(--r);
+            padding: 2.2rem;
+            border: 1px solid rgba(201, 150, 58, .14);
+            transition: all .4s var(--ease)
+        }
+
+        .tc:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--sh2);
+            border-color: rgba(191, 78, 26, .2)
+        }
+
+        .tq {
+            font-size: 3rem;
+            font-family: var(--ff-d);
+            color: var(--gold3);
+            line-height: 1;
+            margin-bottom: .7rem
+        }
+
+        .tc p {
+            font-family: var(--ff-d);
+            font-size: 1.04rem;
+            font-style: italic;
+            color: var(--ink2);
+            line-height: 1.6;
+            margin-bottom: 1.4rem;
+            font-weight: 400
+        }
+
+        .tf {
+            display: flex;
+            align-items: center;
+            gap: .88rem
+        }
+
+        .tav {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--sand);
+            border: 2px solid var(--gold3);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0
+        }
+
+        .tn {
+            font-weight: 600;
+            font-size: .88rem;
+            color: var(--ink)
+        }
+
+        .tr {
+            font-size: .76rem;
+            color: var(--ink3);
+            font-weight: 300
+        }
+
+        .ts {
+            color: var(--gold);
+            font-size: .82rem;
+            letter-spacing: 2px
+        }
+
+        /* ══════════ GALLERY ══════════ */
+        .gallery {
+            background: var(--sand);
+            padding: 7rem 0
+        }
+
+        .gtabs {
+            display: flex;
+            justify-content: center;
+            gap: .55rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap
+        }
+
+        .gt {
+            padding: .48rem 1.25rem;
+            border-radius: 50px;
+            font-size: .78rem;
+            font-weight: 600;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            cursor: none;
+            border: 1.5px solid rgba(191, 78, 26, .22);
+            color: var(--ink3);
+            background: transparent;
+            transition: all .3s
+        }
+
+        .gt.on,
+        .gt:hover {
+            background: var(--clay);
+            color: var(--white);
+            border-color: var(--clay)
+        }
+
+        .gg {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: auto;
+            gap: 1.2rem
+        }
+
+        .gc {
+            position: relative;
+            border-radius: var(--r);
+            overflow: hidden;
+            cursor: none;
+            background: var(--soil2);
+            transition: transform .4s var(--ease)
+        }
+
+        .gc:hover {
+            transform: scale(1.02);
+            z-index: 2
+        }
+
+        .gc:nth-child(1) {
+            grid-row: span 2
+        }
+
+        .gc:nth-child(4) {
+            grid-column: span 2
+        }
+
+        .gc img {
+            width: 100%;
+            height: 100%;
+            min-height: 220px;
+            transition: transform .6s var(--ease)
+        }
+
+        .gc:hover img {
+            transform: scale(1.07)
+        }
+
+        .gco {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(26, 14, 6, .9) 0%, rgba(26, 14, 6, .08) 60%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.4rem;
+            opacity: 0;
+            transition: opacity .4s
+        }
+
+        .gc:hover .gco {
+            opacity: 1
+        }
+
+        .gtag2 {
+            background: var(--clay);
+            color: var(--white);
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: .24rem .68rem;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: .45rem;
+            width: fit-content
+        }
+
+        .gco p {
+            color: rgba(255, 255, 255, .82);
+            font-size: .86rem;
+            font-weight: 300
+        }
+
+        /* Lightbox */
+        #lb {
+            position: fixed;
+            inset: 0;
+            z-index: 99980;
+            background: rgba(8, 4, 1, .95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .4s
+        }
+
+        #lb.on {
+            opacity: 1;
+            pointer-events: all
+        }
+
+        #lb img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: var(--r);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, .5)
+        }
+
+        #lbx {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, .1);
+            border: none;
+            border-radius: 50%;
+            color: var(--white);
+            font-size: 1.15rem;
+            cursor: none;
+            transition: background .3s;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        #lbx:hover {
+            background: var(--clay)
+        }
+
+        #lbc {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, .6);
+            font-size: .82rem;
+            letter-spacing: .08em
+        }
+
+        /* ══════════ TIMELINE ══════════ */
+        .timeline {
+            background: var(--cream);
+            padding: 7rem 0
+        }
+
+        .tlw {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1rem
+        }
+
+        /* vertical line */
+        .tll {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent 0%, var(--gold3) 8%, var(--gold) 30%, var(--clay) 70%, var(--gold3) 92%, transparent 100%);
+            pointer-events: none
+        }
+
+        /* each row */
+        .tli {
+            display: grid;
+            grid-template-columns: 1fr 64px 1fr;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 3rem;
+            position: relative
+        }
+
+        .tli:last-child {
+            margin-bottom: 0
+        }
+
+        /* card */
+        .tlc {
+            padding: 1.8rem 2rem;
+            background: var(--white);
+            border-radius: var(--r);
+            border: 1px solid rgba(201, 150, 58, .2);
+            box-shadow: var(--sh);
+            transition: all .45s var(--ease);
+            position: relative
+        }
+
+        .tlc:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--sh2);
+            border-color: rgba(191, 78, 26, .32)
+        }
+
+        /* left-side card */
+        .tli.tl-left .tlc-card {
+            grid-column: 1;
+            text-align: right
+        }
+
+        /* right-side card */
+        .tli.tl-right .tlc-card {
+            grid-column: 3;
+            text-align: left
+        }
+
+        /* placeholder cells */
+        .tl-empty {
+            grid-column: auto
+        }
+
+        /* centre dot column */
+        .tlm {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            grid-column: 2;
+            position: relative;
+            z-index: 2
+        }
+
+        .tld {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--clay), var(--clay2));
+            border: 3px solid var(--white);
+            border-radius: 50%;
+            box-shadow: 0 0 0 5px rgba(191, 78, 26, .18), var(--sh);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .9rem;
+            color: var(--white);
+            flex-shrink: 0;
+            z-index: 2;
+            transition: transform .35s var(--ease), box-shadow .35s var(--ease)
+        }
+
+        .tli:hover .tld {
+            transform: scale(1.15);
+            box-shadow: 0 0 0 8px rgba(191, 78, 26, .15), var(--sh2)
+        }
+
+        /* connector lines from dot to card */
+        .tl-connector {
+            position: absolute;
+            top: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold3), var(--clay3));
+            transform: translateY(-50%);
+            z-index: 1;
+            width: calc(50% - 52px)
+        }
+
+        .tli.tl-left .tl-connector {
+            right: 50%;
+            margin-right: 32px
+        }
+
+        .tli.tl-right .tl-connector {
+            left: 50%;
+            margin-left: 32px
+        }
+
+        /* year badge */
+        .tly {
+            display: inline-block;
+            font-family: var(--ff-d);
+            font-size: .75rem;
+            font-weight: 700;
+            color: var(--white);
+            background: var(--clay);
+            padding: .22rem .75rem;
+            border-radius: 50px;
+            margin-bottom: .55rem;
+            letter-spacing: .08em;
+            text-transform: uppercase
+        }
+
+        .tlc .h3 {
+            font-size: 1.12rem;
+            margin-bottom: .5rem;
+            color: var(--ink)
+        }
+
+        .tlc p {
+            font-size: .89rem;
+            color: var(--ink3);
+            font-weight: 300;
+            line-height: 1.65
+        }
+
+        /* ══════════ DONATE ══════════ */
+        .donate {
+            background: var(--sand);
+            padding: 7rem 0
+        }
+
+        .dw {
+            display: grid;
+            grid-template-columns: 1fr 1.35fr;
+            gap: 5rem;
+            align-items: start
+        }
+
+        .dleft>p {
+            color: var(--ink3);
+            margin-bottom: 1.8rem;
+            font-weight: 300
+        }
+
+        .dlist {
+            display: flex;
+            flex-direction: column;
+            gap: .9rem;
+            margin-bottom: 2rem
+        }
+
+        .di {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: .95rem 1.1rem;
+            background: var(--white);
+            border-radius: var(--r2);
+            border: 1px solid rgba(201, 150, 58, .2);
+            transition: all .35s
+        }
+
+        .di:hover {
+            border-color: var(--clay);
+            transform: translateX(4px)
+        }
+
+        .diico {
+            width: 34px;
+            height: 34px;
+            background: var(--sand);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .95rem;
+            flex-shrink: 0
+        }
+
+        .dit strong {
+            font-size: .92rem;
+            display: block;
+            color: var(--ink)
+        }
+
+        .dit span {
+            font-size: .8rem;
+            color: var(--ink3);
+            font-weight: 300
+        }
+
+        .trow {
+            display: flex;
+            gap: .75rem;
+            flex-wrap: wrap
+        }
+
+        .tbadge {
+            padding: .42rem .95rem;
+            border-radius: 50px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            background: var(--white);
+            color: var(--clay);
+            border: 2px solid var(--clay);
+            transition: all .3s
+        }
+
+        .tbadge:hover {
+            background: var(--clay);
+            color: var(--white)
+        }
+
+        .df {
+            background: var(--white);
+            border-radius: var(--r);
+            padding: 2.7rem;
+            box-shadow: var(--sh2);
+            border: 1px solid rgba(201, 150, 58, .14)
+        }
+
+        .dft {
+            font-family: var(--ff-d);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: .35rem
+        }
+
+        .dfs {
+            font-size: .82rem;
+            color: var(--ink3);
+            margin-bottom: 1.7rem;
+            font-weight: 300
+        }
+
+        .fg {
+            margin-bottom: 1rem
+        }
+
+        .fg label {
+            display: block;
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--ink2);
+            margin-bottom: .42rem
+        }
+
+        .fg input,
+        .fg select,
+        .fg textarea {
+            width: 100%;
+            padding: .82rem 1rem;
+            border: 1.5px solid rgba(61, 31, 13, .15);
+            border-radius: var(--r2);
+            background: var(--sand);
+            color: var(--ink);
+            font-size: .93rem;
+            transition: all .3s;
+            font-weight: 300
+        }
+
+        .fg input:focus,
+        .fg select:focus,
+        .fg textarea:focus {
+            border-color: var(--clay);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(191, 78, 26, .1)
+        }
+
+        .fg select {
+            appearance: none;
+            cursor: pointer
+        }
+
+        .fg-r {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem
+        }
+
+        .chips {
+            display: flex;
+            gap: .55rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem
+        }
+
+        .chip {
+            padding: .48rem 1rem;
+            border-radius: 50px;
+            border: 1.5px solid rgba(61, 31, 13, .15);
+            background: var(--sand);
+            color: var(--ink3);
+            font-size: .86rem;
+            font-weight: 600;
+            cursor: none;
+            transition: all .3s
+        }
+
+        .chip.on,
+        .chip:hover {
+            background: var(--clay);
+            border-color: var(--clay);
+            color: var(--white)
+        }
+
+        .fmsg {
+            margin-top: .9rem;
+            padding: .82rem 1rem;
+            border-radius: var(--r2);
+            font-size: .86rem;
+            display: none
+        }
+
+        .fmsg.ok {
+            display: block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9
+        }
+
+        .fmsg.err {
+            display: block;
+            background: #fce4ec;
+            color: #b71c1c;
+            border: 1px solid #f8bbd0
+        }
+
+        /* ══════════ NEWSLETTER ══════════ */
+        .nl-sec {
+            background: var(--clay);
+            padding: 5rem 0;
+            position: relative;
+            overflow: hidden
+        }
+
+        .nl-sec::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 70% 100% at 80% 50%, rgba(255, 255, 255, .06) 0%, transparent 70%)
+        }
+
+        .nlw {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+            position: relative;
+            z-index: 1
+        }
+
+        .nlt .lbl.lt {
+            margin-bottom: .55rem
+        }
+
+        .nlh {
+            font-family: var(--ff-d);
+            font-size: clamp(1.7rem, 3vw, 2.3rem);
+            font-weight: 600;
+            color: var(--white);
+            line-height: 1.2
+        }
+
+        .nls {
+            color: rgba(255, 255, 255, .68);
+            margin-top: .45rem;
+            font-weight: 300
+        }
+
+        .nlf {
+            display: flex;
+            gap: .75rem;
+            flex: 1;
+            max-width: 460px
+        }
+
+        .nlf input {
+            flex: 1;
+            padding: .82rem 1.2rem;
+            border-radius: 3px;
+            border: 1.5px solid rgba(255, 255, 255, .22);
+            background: rgba(255, 255, 255, .11);
+            color: var(--white);
+            font-size: .92rem;
+            backdrop-filter: blur(8px)
+        }
+
+        .nlf input::placeholder {
+            color: rgba(255, 255, 255, .5)
+        }
+
+        .nlf input:focus {
+            border-color: var(--white);
+            background: rgba(255, 255, 255, .17);
+            outline: none
+        }
+
+        #nlmsg {
+            margin-top: .75rem;
+            font-size: .82rem;
+            color: rgba(255, 255, 255, .8);
+            display: none
+        }
+
+        /* ══════════ CONTACT ══════════ */
+        .contact {
+            background: var(--cream);
+            padding: 7rem 0
+        }
+
+        .cg {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 5rem;
+            align-items: start
+        }
+
+        .cil {
+            margin: 1.8rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.15rem
+        }
+
+        .ci {
+            display: flex;
+            gap: 1.1rem;
+            align-items: flex-start
+        }
+
+        .cico {
+            width: 42px;
+            height: 42px;
+            background: var(--sand);
+            border-radius: 50%;
+            border: 1px solid rgba(201, 150, 58, .28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            flex-shrink: 0
+        }
+
+        .cib strong {
+            display: block;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--ink2);
+            margin-bottom: .18rem
+        }
+
+        .cib a,
+        .cib span {
+            color: var(--ink3);
+            font-size: .93rem;
+            font-weight: 300
+        }
+
+        .cib a:hover {
+            color: var(--clay)
+        }
+
+        .srow {
+            display: flex;
+            gap: .65rem;
+            margin-top: .5rem
+        }
+
+        .sb {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(191, 78, 26, .28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .82rem;
+            color: var(--clay);
+            transition: all .3s;
+            cursor: none;
+            font-weight: 700
+        }
+
+        .sb:hover {
+            background: var(--clay);
+            color: var(--white);
+            border-color: var(--clay)
+        }
+
+        .mapbox {
+            background: var(--sand);
+            border-radius: var(--r);
+            height: 200px;
+            margin-top: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(201, 150, 58, .18)
+        }
+
+        .mapbox-pin {
+            font-size: 2.4rem;
+            position: relative;
+            z-index: 1;
+            animation: mp 2s ease infinite
+        }
+
+        @keyframes mp {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-8px)
+            }
+        }
+
+        .mapbox::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(191, 78, 26, .05) 29px, rgba(191, 78, 26, .05) 30px), repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(191, 78, 26, .05) 29px, rgba(191, 78, 26, .05) 30px)
+        }
+
+        .cf {
+            background: var(--white);
+            border-radius: var(--r);
+            padding: 2.7rem;
+            box-shadow: var(--sh2);
+            border: 1px solid rgba(201, 150, 58, .14)
+        }
+
+        .cf .h3 {
+            margin-bottom: .35rem
+        }
+
+        .cf>p {
+            font-size: .86rem;
+            color: var(--ink3);
+            margin-bottom: 1.7rem;
+            font-weight: 300
+        }
+
+        .cf textarea {
+            resize: vertical;
+            min-height: 125px
+        }
+
+        /* ══════════ FOOTER ══════════ */
+        .footer {
+            background: var(--soil);
+            position: relative;
+            overflow: hidden
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(191, 78, 26, .1) 0%, transparent 70%)
+        }
+
+        .fm {
+            display: grid;
+            grid-template-columns: 2.2fr 1fr 1fr 1fr;
+            gap: 3.5rem;
+            padding: 5rem 0 4rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+            position: relative;
+            z-index: 1
+        }
+
+        .fb {
+            color: rgba(255, 255, 255, .72)
+        }
+
+        .fb .brand {
+            margin-bottom: 1rem
+        }
+
+        .fb p {
+            font-size: .86rem;
+            line-height: 1.7;
+            font-weight: 300;
+            margin-bottom: 1.4rem
+        }
+
+        .fcol h5 {
+            font-family: var(--ff-d);
+            font-size: 1.02rem;
+            font-weight: 600;
+            color: var(--gold2);
+            margin-bottom: 1.2rem;
+            letter-spacing: .02em
+        }
+
+        .fcol a {
+            display: block;
+            color: rgba(255, 255, 255, .48);
+            font-size: .86rem;
+            font-weight: 300;
+            margin-bottom: .55rem;
+            transition: all .3s
+        }
+
+        .fcol a:hover {
+            color: var(--gold2);
+            padding-left: 5px
+        }
+
+        .fbot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.4rem 0;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+            gap: .75rem
+        }
+
+        .fbot p {
+            font-size: .76rem;
+            color: rgba(255, 255, 255, .28)
+        }
+
+        .fbl {
+            display: flex;
+            gap: 1.4rem
+        }
+
+        .fbl a {
+            font-size: .76rem;
+            color: rgba(255, 255, 255, .28);
+            transition: .3s
+        }
+
+        .fbl a:hover {
+            color: var(--gold2)
+        }
+
+        /* Back to top */
+        #btt {
+            position: fixed;
+            bottom: 2.5rem;
+            right: 2.5rem;
+            width: 48px;
+            height: 48px;
+            background: var(--clay);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            cursor: none;
+            z-index: 990;
+            box-shadow: 0 4px 18px rgba(191, 78, 26, .42);
+            font-size: 1rem;
+            transition: all .35s var(--ease);
+            opacity: 0;
+            transform: translateY(12px);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        #btt.show {
+            opacity: 1;
+            transform: none;
+            pointer-events: all
+        }
+
+        #btt:hover {
+            background: var(--rust);
+            transform: translateY(-3px)
+        }
+
+        /* ══════════ RESPONSIVE ══════════ */
+        @media(max-width:1100px) {
+            .igrid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .fm {
+                grid-template-columns: 1fr 1fr;
+                gap: 2.5rem
+            }
+        }
+
+        @media(max-width:900px) {
+
+            .ag,
+            .dw,
+            .cg {
+                grid-template-columns: 1fr
+            }
+
+            .avis {
+                order: -1
+            }
+
+            .aiw img {
+                height: 360px
+            }
+
+            .afloat {
+                right: 0;
+                bottom: -10px
+            }
+
+            .aframe {
+                display: none
+            }
+
+            .pg {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .tg {
+                grid-template-columns: 1fr
+            }
+
+            .gg {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .gc:nth-child(1) {
+                grid-row: auto
+            }
+
+            .gc:nth-child(4) {
+                grid-column: auto
+            }
+
+            /* Timeline mobile: single-column, line on left */
+            .tll {
+                left: 20px;
+                transform: none
+            }
+
+            .tlw {
+                padding: 0 0 0 .5rem
+            }
+
+            .tli {
+                grid-template-columns: 44px 1fr;
+                gap: .75rem
+            }
+
+            .tli.tl-left .tlc-card,
+            .tli.tl-right .tlc-card {
+                grid-column: 2;
+                text-align: left
+            }
+
+            .tli.tl-left .tlm,
+            .tli.tl-right .tlm {
+                grid-column: 1;
+                grid-row: 1;
+                justify-content: center
+            }
+
+            .tli.tl-left,
+            .tli.tl-right {
+                grid-template-areas: 'dot card' '. card'
+            }
+
+            .tl-empty {
+                display: none
+            }
+
+            .tl-connector {
+                display: none
+            }
+
+            .tli.tl-left {
+                grid-template-columns: 44px 1fr;
+            }
+
+            .tli.tl-right {
+                grid-template-columns: 44px 1fr;
+            }
+
+            .tli.tl-left .tlc,
+            .tli.tl-right .tlc {
+                grid-column: 2
+            }
+
+            .tli.tl-left .tlm,
+            .tli.tl-right .tlm {
+                grid-column: 1
+            }
+
+            .nlw {
+                flex-direction: column;
+                text-align: center
+            }
+
+            .nlf {
+                max-width: 100%;
+                width: 100%
+            }
+
+            .hstats {
+                display: none
+            }
+        }
+
+        @media(max-width:640px) {
+            section {
+                padding: 5rem 0
+            }
+
+            .burger {
+                display: flex
+            }
+
+            .nlinks,
+            .ndonate {
+                display: none
+            }
+
+            .pg {
+                grid-template-columns: 1fr
+            }
+
+            .gg {
+                grid-template-columns: 1fr
+            }
+
+            .igrid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .fg-r {
+                grid-template-columns: 1fr
+            }
+
+            .fm {
+                grid-template-columns: 1fr
+            }
+
+            .fbot {
+                flex-direction: column;
+                text-align: center
+            }
+
+            .fbl {
+                flex-wrap: wrap;
+                justify-content: center
+            }
+
+            .hbody {
+                margin-left: 4vw;
+                margin-right: 4vw
+            }
+
+            .hh1 {
+                font-size: 2.4rem
+            }
+
+            .hact {
+                flex-direction: column
+            }
+
+            .hact .btn {
+                width: 100%;
+                justify-content: center
+            }
+
+            #cur,
+            #cur-ring {
+                display: none
+            }
+
+            body {
+                cursor: auto
+            }
+
+            .btn,
+            .ndonate,
+            .burger,
+            .chip,
+            .gt,
+            .sb,
+            .plink,
+            .gc {
+                cursor: pointer
+            }
+        }
+
+        @media(max-width:400px) {
+            .igrid {
+                grid-template-columns: 1fr
+            }
+
+            .df,
+            .cf {
+                padding: 1.5rem
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="cur"></div>
+    <div id="cur-ring"></div>
+    <div id="prog"></div>
+
+    <!-- PRELOADER -->
+    <div id="pre">
+        <div class="pre-logo">HelpArea</div>
+        <div class="pre-bar">
+            <div class="pre-fill"></div>
+        </div>
+        <div class="pre-lbl">Loading Hope…</div>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div id="lb">
+        <button id="lbx">✕</button>
+        <img id="lbimg" src="" alt="" />
+        <div id="lbc"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <header class="nav" id="nav">
+        <div class="nw">
+            <a href="#home" class="brand">
+                <div class="bi">H</div>
+                <div class="bn"><b>HelpArea</b><small>Empowering Tribal India</small></div>
+            </a>
+            <nav class="nlinks">
+                <a href="#home" class="nl on">Home</a>
+                <a href="#about" class="nl">About</a>
+                <a href="#programs" class="nl">Programs</a>
+                <a href="#gallery" class="nl">Gallery</a>
+                <a href="#journey" class="nl">Journey</a>
+                <a href="#contact" class="nl">Contact</a>
+                <div id="uSec" style="display:none;align-items:center;gap:.6rem;margin-left:1.5rem;padding-left:1.5rem;border-left:1px solid rgba(255,255,255,0.1)">
+                  <a id="aSec" href="admin.html" style="display:none;padding:0.4rem 0.8rem;background:var(--clay);color:white;border-radius:50px;font-size:0.65rem;font-weight:700;text-decoration:none;margin-right:0.5rem;letter-spacing:0.05em">🛡️ ADMIN</a>
+                  <a href="profile.html" style="display:flex;align-items:center;gap:.5rem;text-decoration:none">
+                    <img id="uPic" src="" style="width:30px;height:30px;border-radius:50%;border:1.5px solid var(--gold)"/>
+                    <span id="uName" style="color:white;font-size:0.8rem;white-space:nowrap">User</span>
+                  </a>
+                  <button onclick="signOut()" style="background:none;border:none;color:var(--gold2);font-size:0.7rem;cursor:pointer;margin-left:0.5rem">Logout</button>
+                </div>
+                <a href="javascript:void(0)" class="nl" onclick="openAuth()" id="loginBtn">Sign In</a>
+            </nav>
+            <a href="#donate" class="ndonate">Donate Now</a>
+            <button class="burger" id="burg">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+    <div class="dov" id="dov"></div>
+    <nav class="drawer" id="drw">
+        <a href="#home" class="nl">Home</a>
+        <a href="#about" class="nl">About</a>
+        <a href="#programs" class="nl">Programs</a>
+        <a href="#gallery" class="nl">Gallery</a>
+        <a href="#journey" class="nl">Journey</a>
+        <a href="#donate" class="nl">Donate</a>
+        <a href="#contact" class="nl">Contact</a>
+        <div id="uSecM" style="display:none;padding:1.5rem;border-top:1px solid rgba(255,255,255,0.05);margin-top:1rem">
+          <a href="profile.html" style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.5rem;text-decoration:none">
+            <img id="uPicM" src="" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--gold)"/>
+            <div style="display:flex;flex-direction:column">
+               <span id="uNameM" style="color:white;font-size:1.1rem;font-weight:600">User</span>
+               <small style="color:var(--gold);font-size:0.75rem">Edit Profile ⚙️</small>
+            </div>
+          </a>
+          <button onclick="signOut()" style="background:var(--clay);color:white;border:none;padding:.7rem 1.2rem;border-radius:8px;font-size:0.9rem;cursor:pointer;width:100%">Logout Account</button>
+        </div>
+        <a href="javascript:void(0)" class="nl" onclick="openAuth()" id="loginBtnM" style="color:var(--gold);font-weight:700;margin-top:1rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:1.5rem">🔐 Sign In / Create Account</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="hbg">
+            <img src="https://images.unsplash.com/photo-1604928141064-207cea6f571f?w=1800&q=85" alt="Tribal women" />
+        </div>
+        <div class="hgrain"></div>
+        <div class="hbody">
+            <div class="hpill"><span class="hpdot"></span>Empowering Indigenous Communities Since 2010</div>
+            <h1 class="hh1">Preserving<br /><strong>Tribal Culture</strong><br />&amp; Supporting Lives</h1>
+            <p class="hsub">Every tradition deserves to live. Every family deserves dignity. We walk alongside India's
+                tribal communities — not in front of them.</p>
+            <div class="hact">
+                <a href="#donate" class="btn btn-p">Donate Now ↗</a>
+                <a href="#programs" class="btn btn-o">Explore Programs</a>
+            </div>
+        </div>
+        <div class="hscr">
+            <div class="sct">
+                <div class="scd"></div>
+            </div><span>Scroll to discover</span>
+        </div>
+        <div class="hstats">
+            <div class="hs">
+                <div class="hs-n">100+</div>
+                <div class="hs-l">Families</div>
+            </div>
+            <div class="hs">
+                <div class="hs-n">2500+</div>
+                <div class="hs-l">Children</div>
+            </div>
+            <div class="hs">
+                <div class="hs-n">50+</div>
+                <div class="hs-l">Villages</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="mstrip">
+        <div class="mtrack">
+            <div class="mi"><span>✦</span> Education for Every Child</div>
+            <div class="mi"><span>✦</span> Healthcare Outreach</div>
+            <div class="mi"><span>✦</span> Cultural Preservation</div>
+            <div class="mi"><span>✦</span> Women Empowerment</div>
+            <div class="mi"><span>✦</span> Livelihood Support</div>
+            <div class="mi"><span>✦</span> 80G Tax Exemption</div>
+            <div class="mi"><span>✦</span> FCRA Registered</div>
+            <div class="mi"><span>✦</span> 15 Years of Service</div>
+            <div class="mi"><span>✦</span> Education for Every Child</div>
+            <div class="mi"><span>✦</span> Healthcare Outreach</div>
+            <div class="mi"><span>✦</span> Cultural Preservation</div>
+            <div class="mi"><span>✦</span> Women Empowerment</div>
+            <div class="mi"><span>✦</span> Livelihood Support</div>
+            <div class="mi"><span>✦</span> 80G Tax Exemption</div>
+            <div class="mi"><span>✦</span> FCRA Registered</div>
+            <div class="mi"><span>✦</span> 15 Years of Service</div>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section class="about" id="about">
+        <div class="ctr">
+            <div class="ag">
+                <div class="avis" data-r="l">
+                    <div class="aframe"></div>
+                    <div class="aiw">
+                        <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=900&q=85"
+                            alt="Tribal elder woman" />
+                    </div>
+                    <div class="afloat">
+                        <div class="afn">15+</div>
+                        <div class="afl">Years walking with tribal communities</div>
+                    </div>
+                </div>
+                <div class="at" data-r="r">
+                    <span class="lbl">Who We Are</span>
+                    <h2 class="h2">About Adi Parampara</h2>
+                    <div class="orn-l"><span>✦</span></div>
+                    <p>Adi Parampara is a grassroots non-profit weaving together culture, dignity, and opportunity for
+                        tribal communities across India. We don't arrive with solutions — we listen first.</p>
+                    <p>Our name — <em style="color:var(--clay);font-family:var(--ff-d)">Adi Parampara</em> — means "the
+                        original tradition." We believe ancient knowledge, oral histories, and indigenous art are
+                        irreplaceable gifts humanity cannot afford to lose.</p>
+                    <p>Founded in 2010, we work in 50+ villages across 6 states, building programs designed by
+                        communities, for communities.</p>
+                    <div class="pills">
+                        <span class="pill">Education</span>
+                        <span class="pill">Healthcare</span>
+                        <span class="pill">Cultural Arts</span>
+                        <span class="pill">Livelihood</span>
+                        <span class="pill">Women's Rights</span>
+                        <span class="pill">Environment</span>
+                    </div>
+                    <a href="#programs" class="btn btn-gh">Explore Our Programs →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROGRAMS -->
+    <section class="programs" id="programs">
+        <div class="ctr">
+            <div class="sec">
+                <span class="lbl">What We Do</span>
+                <h2 class="h2">Our Core Programs</h2>
+                <div class="orn"><span>✦</span></div>
+            </div>
+            <div class="pg">
+                <div class="pc" data-r data-delay="0">
+                    <div class="pimg"><img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&q=80"
+                            alt="Education" />
+                        <div class="pov"></div>
+                        <div class="piw">📚</div>
+                    </div>
+                    <div class="pb">
+                        <div class="ptag">Program 01</div>
+                        <h3 class="h3">Education &amp; Literacy</h3>
+                        <p>Bringing quality education to remote tribal schools — building classrooms, training teachers,
+                            and supporting children through scholarships and mid-day meals.</p><a href="#"
+                            class="plink">Learn more <span>→</span></a>
+                    </div>
+                </div>
+                <div class="pc" data-r data-delay="120">
+                    <div class="pimg"><img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80"
+                            alt="Healthcare" />
+                        <div class="pov"></div>
+                        <div class="piw">🏥</div>
+                    </div>
+                    <div class="pb">
+                        <div class="ptag">Program 02</div>
+                        <h3 class="h3">Healthcare Outreach</h3>
+                        <p>Mobile health camps, maternal care, vaccination drives, and telemedicine connecting tribal
+                            villages to doctors — because geography should never determine health outcomes.</p><a
+                            href="#" class="plink">Learn more <span>→</span></a>
+                    </div>
+                </div>
+                <div class="pc" data-r data-delay="240">
+                    <div class="pimg"><img src="https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?w=600&q=80"
+                            alt="Women" />
+                        <div class="pov"></div>
+                        <div class="piw">🌸</div>
+                    </div>
+                    <div class="pb">
+                        <div class="ptag">Program 03</div>
+                        <h3 class="h3">Women Empowerment</h3>
+                        <p>Self-help groups, skill training, microfinance access, and legal awareness programs helping
+                            tribal women build financial independence and reclaim their rights.</p><a href="#"
+                            class="plink">Learn more <span>→</span></a>
+                    </div>
+                </div>
+                <div class="pc" data-r data-delay="0">
+                    <div class="pimg"><img src="https://images.unsplash.com/photo-1604928141064-207cea6f571f?w=600&q=80"
+                            alt="Culture" />
+                        <div class="pov"></div>
+                        <div class="piw">🎭</div>
+                    </div>
+                    <div class="pb">
+                        <div class="ptag">Program 04</div>
+                        <h3 class="h3">Cultural Preservation</h3>
+                        <p>Documenting folk songs, dances, and oral histories. Running festivals and arts workshops that
+                            keep ancestral traditions alive and economically valued.</p><a href="#" class="plink">Learn
+                            more <span>→</span></a>
+                    </div>
+                </div>
+                <div class="pc" data-r data-delay="120">
+                    <div class="pimg"><img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80"
+                            alt="Livelihood" />
+                        <div class="pov"></div>
+                        <div class="piw">🧶</div>
+                    </div>
+                    <div class="pb">
+                        <div class="ptag">Program 05</div>
+                        <h3 class="h3">Livelihood &amp; Artisans</h3>
+                        <p>Market linkages, e-commerce training, and fair-trade certification for tribal artisans —
+                            ensuring traditional crafts generate dignified income in the modern economy.</p><a href="#"
+                            class="plink">Learn more <span>→</span></a>
+                    </div>
+                </div>
+                <div class="pc" data-r data-delay="240">
+                    <div class="pimg"><img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80"
+                            alt="Food" />
+                        <div class="pov"></div>
+                        <div class="piw">🌾</div>
+                    </div>
+                    <div class="pb">
+                        <div class="ptag">Program 06</div>
+                        <h3 class="h3">Food &amp; Nutrition</h3>
+                        <p>Community gardens, nutrition awareness, and food distribution ensuring no child in our
+                            villages experiences hunger or malnutrition.</p><a href="#" class="plink">Learn more
+                            <span>→</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IMPACT -->
+    <section class="impact" id="impact">
+        <div class="ipat"></div>
+        <div class="ctr">
+            <div class="sec"><span class="lbl lt">By the Numbers</span>
+                <h2 class="h2 lt">Our Impact</h2>
+                <div class="orn"><span style="color:var(--gold)">✦</span></div>
+            </div>
+            <div class="igrid">
+                <div class="ic" data-r data-delay="0"><span class="ic-ico">🏠</span>
+                    <div><span class="ic-v" data-t="100">0</span><span class="ic-s">+</span></div>
+                    <p class="ic-l">Tribal Families Helped</p>
+                </div>
+                <div class="ic" data-r data-delay="100"><span class="ic-ico">👧</span>
+                    <div><span class="ic-v" data-t="2500">0</span><span class="ic-s">+</span></div>
+                    <p class="ic-l">Children Educated</p>
+                </div>
+                <div class="ic" data-r data-delay="200"><span class="ic-ico">🏘️</span>
+                    <div><span class="ic-v" data-t="50">0</span><span class="ic-s">+</span></div>
+                    <p class="ic-l">Villages Supported</p>
+                </div>
+                <div class="ic" data-r data-delay="300"><span class="ic-ico">🌿</span>
+                    <div><span class="ic-v" data-t="15">0</span><span class="ic-s">+</span></div>
+                    <p class="ic-l">Years of Service</p>
+                </div>
+                <div class="ic" data-r data-delay="400"><span class="ic-ico">👩</span>
+                    <div><span class="ic-v" data-t="800">0</span><span class="ic-s">+</span></div>
+                    <p class="ic-l">Women Empowered</p>
+                </div>
+                <div class="ic" data-r data-delay="500"><span class="ic-ico">🎨</span>
+                    <div><span class="ic-v" data-t="300">0</span><span class="ic-s">+</span></div>
+                    <p class="ic-l">Artisans Trained</p>
+                </div>
+                <div class="ic" data-r data-delay="600"><span class="ic-ico">🏕️</span>
+                    <div><span class="ic-v" data-t="6">0</span><span class="ic-s"></span></div>
+                    <p class="ic-l">States Covered</p>
+                </div>
+                <div class="ic" data-r data-delay="700"><span class="ic-ico">❤️</span>
+                    <div><span class="ic-v" data-t="5000">0</span><span class="ic-s">+</span></div>
+                    <p class="ic-l">Donors Worldwide</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testi" id="stories">
+        <div class="ctr">
+            <div class="sec"><span class="lbl">Real Stories</span>
+                <h2 class="h2">Voices from the Community</h2>
+                <div class="orn"><span>✦</span></div>
+            </div>
+            <div class="tg">
+                <div class="tc" data-r data-delay="0">
+                    <div class="tq">"</div>
+                    <p>Adi Parampara built a school in our village. My daughter is the first girl in our family to read
+                        and write. I never imagined this was possible for us.</p>
+                    <div class="tf">
+                        <div class="tav">👩</div>
+                        <div>
+                            <div class="tn">Savitri Devi</div>
+                            <div class="tr">Mother, Jharkhand Village</div>
+                            <div class="ts">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tc" data-r data-delay="150">
+                    <div class="tq">"</div>
+                    <p>The mobile health camp came to our village for the first time last year. The doctor found my
+                        father's TB early. He is alive today because of this organisation.</p>
+                    <div class="tf">
+                        <div class="tav">👨</div>
+                        <div>
+                            <div class="tn">Raju Munda</div>
+                            <div class="tr">Farmer, Odisha</div>
+                            <div class="ts">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tc" data-r data-delay="300">
+                    <div class="tq">"</div>
+                    <p>I learnt to sell our Gond art online through their training. Now I earn ₹15,000 a month from my
+                        home. My children go to the best school in town.</p>
+                    <div class="tf">
+                        <div class="tav">🎨</div>
+                        <div>
+                            <div class="tn">Meena Gond</div>
+                            <div class="tr">Tribal Artisan, Madhya Pradesh</div>
+                            <div class="ts">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="gallery" id="gallery">
+        <div class="ctr">
+            <div class="sec"><span class="lbl">Visual Stories</span>
+                <h2 class="h2">Gallery &amp; Stories</h2>
+                <div class="orn"><span>✦</span></div>
+            </div>
+            <div class="gtabs">
+                <button class="gt on" data-f="all">All</button>
+                <button class="gt" data-f="education">Education</button>
+                <button class="gt" data-f="health">Healthcare</button>
+                <button class="gt" data-f="culture">Culture</button>
+                <button class="gt" data-f="women">Women</button>
+            </div>
+            <div class="gg">
+                <div class="gc" data-cat="education"><img
+                        src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80" alt=""
+                        data-cap="Education Support – Children learning in a tribal school" />
+                    <div class="gco"><span class="gtag2">Education</span>
+                        <p>Children discovering the joy of learning.</p>
+                    </div>
+                </div>
+                <div class="gc" data-cat="health"><img
+                        src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80" alt=""
+                        data-cap="Healthcare Outreach – Mobile health camp in a remote village" />
+                    <div class="gco"><span class="gtag2">Healthcare</span>
+                        <p>Mobile health camp reaching remote villages.</p>
+                    </div>
+                </div>
+                <div class="gc" data-cat="culture"><img
+                        src="https://images.unsplash.com/photo-1604928141064-207cea6f571f?w=600&q=80" alt=""
+                        data-cap="Cultural Celebrations – Preserving ancient traditions" />
+                    <div class="gco"><span class="gtag2">Culture</span>
+                        <p>Celebrating the richness of tribal heritage.</p>
+                    </div>
+                </div>
+                <div class="gc" data-cat="women"><img
+                        src="https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?w=800&q=80" alt=""
+                        data-cap="Women Empowerment – Self-help group meeting" />
+                    <div class="gco"><span class="gtag2">Women</span>
+                        <p>Women building strength together.</p>
+                    </div>
+                </div>
+                <div class="gc" data-cat="education"><img
+                        src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80" alt=""
+                        data-cap="Nutrition Program – Mid-day meal initiative" />
+                    <div class="gco"><span class="gtag2">Education</span>
+                        <p>Mid-day meals keep children in school.</p>
+                    </div>
+                </div>
+                <div class="gc" data-cat="culture"><img
+                        src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80" alt=""
+                        data-cap="Artisan Livelihood – Traditional craft training" />
+                    <div class="gco"><span class="gtag2">Culture</span>
+                        <p>Tribal artisans preserving ancestral crafts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="timeline" id="journey">
+        <div class="ctr">
+            <div class="sec"><span class="lbl">Our Story</span>
+                <h2 class="h2">The Journey So Far</h2>
+                <div class="orn"><span>✦</span></div>
+            </div>
+            <div class="tlw">
+                <div class="tll"></div>
+
+                <!-- 2010 – LEFT -->
+                <div class="tli tl-left" data-r="l">
+                    <div class="tlc tlc-card">
+                        <div class="tly">2010</div>
+                        <h3 class="h3">Founded in Jharkhand</h3>
+                        <p>Adi Parampara begins with 5 team members in 3 villages — documenting oral histories and
+                            establishing a community library.</p>
+                    </div>
+                    <div class="tl-connector"></div>
+                    <div class="tlm">
+                        <div class="tld">✦</div>
+                    </div>
+                    <div class="tl-empty"></div>
+                </div>
+
+                <!-- 2013 – RIGHT -->
+                <div class="tli tl-right" data-r="r">
+                    <div class="tl-empty"></div>
+                    <div class="tlm">
+                        <div class="tld">✦</div>
+                    </div>
+                    <div class="tl-connector"></div>
+                    <div class="tlc tlc-card">
+                        <div class="tly">2013</div>
+                        <h3 class="h3">First School Built</h3>
+                        <p>With donor support we built the first school in the Saranda forest region — 120 children
+                            enrolled in the first term.</p>
+                    </div>
+                </div>
+
+                <!-- 2016 – LEFT -->
+                <div class="tli tl-left" data-r="l">
+                    <div class="tlc tlc-card">
+                        <div class="tly">2016</div>
+                        <h3 class="h3">Healthcare Program Launched</h3>
+                        <p>Mobile health vans begin monthly visits to 20 remote villages. Over 3,000 patients received
+                            care in year one.</p>
+                    </div>
+                    <div class="tl-connector"></div>
+                    <div class="tlm">
+                        <div class="tld">✦</div>
+                    </div>
+                    <div class="tl-empty"></div>
+                </div>
+
+                <!-- 2019 – RIGHT -->
+                <div class="tli tl-right" data-r="r">
+                    <div class="tl-empty"></div>
+                    <div class="tlm">
+                        <div class="tld">✦</div>
+                    </div>
+                    <div class="tl-connector"></div>
+                    <div class="tlc tlc-card">
+                        <div class="tly">2019</div>
+                        <h3 class="h3">FCRA Registration &amp; Expansion</h3>
+                        <p>Awarded FCRA status enabling international donations. Expanded to Odisha, Madhya Pradesh, and
+                            Chhattisgarh.</p>
+                    </div>
+                </div>
+
+                <!-- 2022 – LEFT -->
+                <div class="tli tl-left" data-r="l">
+                    <div class="tlc tlc-card">
+                        <div class="tly">2022</div>
+                        <h3 class="h3">Artisan E-Commerce Platform</h3>
+                        <p>Launched an online marketplace connecting 300+ artisans to buyers — ₹40L+ in first-year
+                            sales.</p>
+                    </div>
+                    <div class="tl-connector"></div>
+                    <div class="tlm">
+                        <div class="tld">✦</div>
+                    </div>
+                    <div class="tl-empty"></div>
+                </div>
+
+                <!-- 2024 – RIGHT -->
+                <div class="tli tl-right" data-r="r">
+                    <div class="tl-empty"></div>
+                    <div class="tlm">
+                        <div class="tld">✦</div>
+                    </div>
+                    <div class="tl-connector"></div>
+                    <div class="tlc tlc-card">
+                        <div class="tly">2024</div>
+                        <h3 class="h3">Today &amp; Beyond</h3>
+                        <p>50+ villages, 6 states, 5,000+ donors. Next goal: reaching 100 villages by 2027.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- DONATE -->
+    <section class="donate" id="donate">
+        <div class="ctr">
+            <div class="sec"><span class="lbl">Make a Difference</span>
+                <h2 class="h2">Your Donation Changes Lives</h2>
+                <div class="orn"><span>✦</span></div>
+            </div>
+            <div class="dw">
+                <div class="dleft" data-r="l">
+                    <span class="lbl gd">Why Give?</span>
+                    <h2 class="h2" style="font-size:clamp(1.5rem,3vw,2rem);margin-bottom:.8rem">Every rupee travels
+                        directly to the field</h2>
+                    <p>We maintain 85%+ program efficiency. Your donation is never wasted on overhead — it goes to the
+                        people who need it most.</p>
+                    <div class="dlist">
+                        <div class="di">
+                            <div class="diico">🍱</div>
+                            <div class="dit"><strong>₹500 / month</strong><span>Feeds a tribal child for an entire
+                                    month</span></div>
+                        </div>
+                        <div class="di">
+                            <div class="diico">📖</div>
+                            <div class="dit"><strong>₹1,000 / year</strong><span>Full school supplies kit for one
+                                    child</span></div>
+                        </div>
+                        <div class="di">
+                            <div class="diico">🏥</div>
+                            <div class="dit"><strong>₹5,000</strong><span>Sponsors one health camp for a village</span>
+                            </div>
+                        </div>
+                        <div class="di">
+                            <div class="diico">🎓</div>
+                            <div class="dit"><strong>₹10,000</strong><span>Full scholarship for one girl child for a
+                                    year</span></div>
+                        </div>
+                        <div class="di">
+                            <div class="diico">🏫</div>
+                            <div class="dit"><strong>₹50,000</strong><span>Builds one classroom in a tribal
+                                    school</span></div>
+                        </div>
+                    </div>
+                    <div class="trow">
+                        <span class="tbadge">80G Exemption</span>
+                        <span class="tbadge">FCRA Registered</span>
+                        <span class="tbadge">GiveIndia Partner</span>
+                    </div>
+                </div>
+                <div class="df" data-r="r">
+                    <div class="dft">Make a Donation</div>
+                    <div class="dfs">Secure · Tax Exempt · Every rupee reaches the field</div>
+                    <div class="fg"><label>Full Name</label><input type="text" id="dN" placeholder="Your full name"
+                            required /></div>
+                    <div class="fg-r">
+                        <div class="fg"><label>Email</label><input type="email" id="dE" placeholder="your@email.com"
+                                required /></div>
+                        <div class="fg"><label>Phone</label><input type="tel" id="dP" placeholder="98765 43210"
+                                required /></div>
+                    </div>
+                    <div class="fg">
+                        <label>Select Amount</label>
+                        <div class="chips">
+                            <button class="chip" data-a="500">₹500</button>
+                            <button class="chip" data-a="1000">₹1,000</button>
+                            <button class="chip" data-a="5000">₹5,000</button>
+                            <button class="chip" data-a="10000">₹10,000</button>
+                            <button class="chip" data-a="custom">Custom</button>
+                        </div>
+                        <input type="number" id="dA" placeholder="Or enter amount (₹)" min="1" required />
+                    </div>
+                    <div class="fg"><label>Donate Towards</label>
+                        <select id="dPur">
+                            <option value="">Choose a cause (optional)</option>
+                            <option value="education">Education</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="culture">Cultural Preservation</option>
+                            <option value="women">Women Empowerment</option>
+                            <option value="livelihood">Livelihood</option>
+                            <option value="general">General Fund</option>
+                        </select>
+                    </div>
+                    <div class="fg"><label>Message (optional)</label><textarea id="dM" rows="2"
+                            placeholder="Share your thoughts…"></textarea></div>
+                    <div id="dProofSec" style="display:none;position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s">
+                        <div style="background:var(--white);border-radius:20px;padding:3rem 2rem;width:min(450px,92%);text-align:center;box-shadow:0 30px 100px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);transform:scale(0.9);transition:transform .4s">
+                            <div style="font-size:3.5rem;margin-bottom:1.5rem">📸</div>
+                            <h2 class="h2" style="font-size:1.8rem;margin-bottom:.5rem;color:var(--ink)">Step 2: Confirm Payment</h2>
+                            <p style="color:var(--ink3);margin-bottom:2rem;font-size:0.95rem">Upload your UPI payment screenshot to complete the process and receive your 80G receipt via email.</p>
+                            
+                            <div style="background:var(--sand);border:2px dashed var(--clay);border-radius:14px;padding:2rem 1.5rem;margin-bottom:2rem">
+                                <label style="display:inline-block;padding:.9rem 1.8rem;background:var(--clay);color:white;border-radius:50px;cursor:pointer;font-size:0.9rem;font-weight:600;letter-spacing:0.05em;border:2px solid transparent;transition:all .3s">
+                                    <span id="dProofTxt">📎 Select Screenshot</span>
+                                    <input type="file" id="dProof" accept="image/*" style="display:none" onchange="document.getElementById('dProofTxt').textContent='✅ File Selected'"/>
+                                </label>
+                            </div>
+                            
+                            <div style="display:flex;flex-direction:column;gap:0.8rem">
+                                <button class="btn btn-g btn-fw" onclick="submitProof()" style="padding:1.1rem;box-shadow:0 10px 30px rgba(201,150,58,0.3)">Confirm & Submit Proof →</button>
+                                <button onclick="document.getElementById('dProofSec').style.opacity='0';document.getElementById('dProofSec').style.pointerEvents='none'" style="background:none;border:none;color:var(--ink3);font-size:0.85rem;cursor:pointer;text-decoration:underline">I'll do this later</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-p btn-fw" id="donBtn" onclick="submitDonate()">Donate Securely Now ↗</button>
+                    <div id="donMsg" class="fmsg"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="nl-sec">
+        <div class="ctr">
+            <div class="nlw">
+                <div class="nlt">
+                    <span class="lbl lt">Stay Connected</span>
+                    <div class="nlh">Join Our Community of Changemakers</div>
+                    <p class="nls">Monthly updates from the field — stories, impact reports, and ways to help.</p>
+                </div>
+                <div>
+                    <div class="nlf">
+                        <input type="email" id="nlE" placeholder="Enter your email address…" />
+                        <button class="btn btn-g" onclick="subNL()">Subscribe</button>
+                    </div>
+                    <div id="nlmsg"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+        <div class="ctr">
+            <div class="sec"><span class="lbl">Reach Out</span>
+                <h2 class="h2">Get In Touch</h2>
+                <div class="orn"><span>✦</span></div>
+            </div>
+            <div class="cg">
+                <div data-r="l">
+                    <div class="cil">
+                        <div class="ci">
+                            <div class="cico">📞</div>
+                            <div class="cib"><strong>Phone</strong><a href="tel:+919676543210">+91 9676543210</a></div>
+                        </div>
+                        <div class="ci">
+                            <div class="cico">✉️</div>
+                            <div class="cib"><strong>Email</strong><a
+                                    href="mailto:info@adiparampara.org">info@adiparampara.org</a></div>
+                        </div>
+                        <div class="ci">
+                            <div class="cico">📍</div>
+                            <div class="cib"><strong>Registered Office</strong><span>Your Address Here, India –
+                                    500001</span></div>
+                        </div>
+                        <div class="ci">
+                            <div class="cico">🕐</div>
+                            <div class="cib"><strong>Office Hours</strong><span>Mon – Sat, 9:00 AM – 6:00 PM IST</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="srow">
+                        <a href="#" class="sb">f</a>
+                        <a href="#" class="sb">📷</a>
+                        <a href="#" class="sb">𝕏</a>
+                        <a href="#" class="sb">▶</a>
+                        <a href="#" class="sb">in</a>
+                    </div>
+                    <div class="mapbox">
+                        <div class="mapbox-pin">📍</div>
+                    </div>
+                </div>
+                <div class="cf" data-r="r">
+                    <h3 class="h3">Send a Message</h3>
+                    <p>We respond within 24 hours on working days.</p>
+                    <div class="fg"><label>Your Name</label><input type="text" id="cN" placeholder="Full name"
+                            required /></div>
+                    <div class="fg-r">
+                        <div class="fg"><label>Email</label><input type="email" id="cE" placeholder="your@email.com"
+                                required /></div>
+                        <div class="fg"><label>Subject</label><input type="text" id="cS"
+                                placeholder="How can we help?" /></div>
+                    </div>
+                    <div class="fg"><label>Message</label><textarea id="cMb" rows="5" placeholder="Your message…"
+                            required></textarea></div>
+                    <button class="btn btn-p btn-fw" onclick="submitContact()">Send Message →</button>
+                    <div id="conMsg" class="fmsg"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="ctr">
+            <div class="fm">
+                <div class="fb">
+                    <a href="#home" class="brand" style="color:var(--white)">
+                        <div class="bi">आ</div>
+                        <div class="bn"><b>Adi Parampara</b><small>Empowering Tribal India</small></div>
+                    </a>
+                    <p>A grassroots non-profit dedicated to preserving tribal culture, expanding access to education and
+                        healthcare, and building economic dignity for India's indigenous communities.</p>
+                    <div class="srow">
+                        <a href="#" class="sb">f</a><a href="#" class="sb">📷</a>
+                        <a href="#" class="sb">𝕏</a><a href="#" class="sb">▶</a>
+                    </div>
+                </div>
+                <div class="fcol">
+                    <h5>Quick Links</h5>
+                    <a href="#home">Home</a><a href="#about">About Us</a>
+                    <a href="#programs">Programs</a><a href="#gallery">Gallery</a>
+                    <a href="#journey">Journey</a><a href="#donate">Donate</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="fcol">
+                    <h5>Programs</h5>
+                    <a href="#">Education &amp; Literacy</a><a href="#">Healthcare Outreach</a>
+                    <a href="#">Women Empowerment</a><a href="#">Cultural Preservation</a>
+                    <a href="#">Livelihood &amp; Artisans</a><a href="#">Food &amp; Nutrition</a>
+                </div>
+                <div class="fcol">
+                    <h5>Legal</h5>
+                    <a href="#">Privacy Policy</a><a href="#">Terms of Use</a>
+                    <a href="#">Donation Policy</a><a href="#">Annual Reports</a>
+                    <a href="#">80G Certificate</a><a href="#">FCRA Registration</a>
+                </div>
+            </div>
+            <div class="fbot">
+                <p>© 2024 Adi Parampara · All Rights Reserved · Reg. No. XXXXX</p>
+                <div class="fbl">
+                    <a href="#">Privacy</a><a href="#">Terms</a>
+                    <a href="#">Refund Policy</a><a href="#">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+
+    <script>
+        /* ── firebase auth login logic ── */
+
+        /* ── firebase auth login logic ── */
+        function openAuth() { location.href = 'login.html'; }
+        function signOut() { firebase.auth().signOut().then(() => { location.reload(); }); }
+        firebase.auth().onAuthStateChanged(u => {
+            const s = document.getElementById('uSec'), b = document.getElementById('loginBtn');
+            const sm = document.getElementById('uSecM'), bm = document.getElementById('loginBtnM');
+            const a = document.getElementById('aSec');
+            if (!s || !b) return;
+            if (u) {
+                s.style.display = 'flex'; b.style.display = 'none';
+                if (sm) sm.style.display = 'block'; if (bm) bm.style.display = 'none';
+                if (a) a.style.display = (u.email === 'info@helparea.org') ? 'inline-block' : 'none';
+                if (document.getElementById('uPic')) document.getElementById('uPic').src = u.photoURL || 'https://via.placeholder.com/32';
+                if (document.getElementById('uPicM')) document.getElementById('uPicM').src = u.photoURL || 'https://via.placeholder.com/32';
+                if (document.getElementById('uName')) document.getElementById('uName').textContent = u.displayName ? u.displayName.split(' ')[0] : 'User';
+                if (document.getElementById('uNameM')) document.getElementById('uNameM').textContent = u.displayName || 'User';
+                const dN = document.getElementById('dN'), dE = document.getElementById('dE');
+                if (dN && !dN.value) dN.value = u.displayName || '';
+                if (dE && !dE.value) dE.value = u.email || '';
+            } else {
+                s.style.display = 'none'; b.style.display = 'block';
+                if (sm) sm.style.display = 'none'; if (bm) bm.style.display = 'block';
+            }
+        });
+
+        /* ═══ PRELOADER ═══ */
+        window.addEventListener('load', () => setTimeout(() => document.getElementById('pre').classList.add('gone'), 2400));
+
+        /* ═══ CUSTOM CURSOR ═══ */
+        const C = document.getElementById('cur'), R = document.getElementById('cur-ring');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY });
+        (function tick() {
+            rx += (mx - rx) * .13; ry += (my - ry) * .13;
+            if (C) C.style.cssText = `left:${mx}px;top:${my}px`;
+            if (R) R.style.cssText = `left:${rx}px;top:${ry}px`;
+            requestAnimationFrame(tick);
+        })();
+        document.querySelectorAll('a,button,.chip,.gt,.gc,.pc,.tc,.ic,.aiw').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('grow'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('grow'));
+        });
+
+        /* ═══ PROGRESS BAR ═══ */
+        const PB = document.getElementById('prog');
+        window.addEventListener('scroll', () => {
+            PB.style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100) + '%';
+        });
+
+        /* ═══ NAVBAR ═══ */
+        const nav = document.getElementById('nav'), burg = document.getElementById('burg'),
+            drw = document.getElementById('drw'), dov = document.getElementById('dov');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('solid', window.scrollY > 70);
+            updA();
+            document.getElementById('btt').classList.toggle('show', window.scrollY > 500);
+        });
+        burg.addEventListener('click', tog); dov.addEventListener('click', tog);
+        drw.querySelectorAll('.nl').forEach(l => l.addEventListener('click', tog));
+        function tog() { burg.classList.toggle('on'); drw.classList.toggle('on'); dov.classList.toggle('on'); document.body.classList.toggle('locked') }
+        function updA() {
+            let c = '';
+            document.querySelectorAll('section[id]').forEach(s => { if (window.scrollY >= s.offsetTop - 140) c = s.id });
+            document.querySelectorAll('.nl').forEach(l => l.classList.toggle('on', l.getAttribute('href') === `#${c}`));
+        }
+        document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+            const t = document.querySelector(a.getAttribute('href'));
+            if (!t) return; e.preventDefault();
+            window.scrollTo({ top: t.offsetTop - nav.offsetHeight - 10, behavior: 'smooth' });
+        }));
+
+        /* ═══ REVEAL ═══ */
+        const revs = document.querySelectorAll('[data-r]');
+        function rev() { revs.forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight - 70) { const d = +el.dataset.delay || 0; setTimeout(() => el.classList.add('vis'), d) } }) }
+        window.addEventListener('scroll', rev); window.addEventListener('resize', rev); rev();
+
+        /* ═══ COUNTERS ═══ */
+        let cdone = false;
+        function runc() {
+            if (cdone) return;
+            const s = document.querySelector('.impact');
+            if (!s || s.getBoundingClientRect().top > window.innerHeight) return;
+            cdone = true;
+            document.querySelectorAll('.ic-v').forEach(el => {
+                const tgt = +el.dataset.t; let cur = 0; const step = tgt / (1800 / 16);
+                const t = setInterval(() => { cur += step; if (cur >= tgt) { el.textContent = tgt.toLocaleString('en-IN'); clearInterval(t) } else el.textContent = Math.floor(cur).toLocaleString('en-IN') }, 16);
+            });
+        }
+        window.addEventListener('scroll', runc); runc();
+
+        /* ═══ GALLERY FILTER ═══ */
+        document.querySelectorAll('.gt').forEach(tab => tab.addEventListener('click', () => {
+            document.querySelectorAll('.gt').forEach(t => t.classList.remove('on')); tab.classList.add('on');
+            const f = tab.dataset.f;
+            document.querySelectorAll('.gc').forEach(c => {
+                const m = f === 'all' || c.dataset.cat === f;
+                c.style.opacity = m ? '1' : '0.18'; c.style.transform = m ? '' : 'scale(.96)'; c.style.pointerEvents = m ? '' : 'none';
+            });
+        }));
+
+        /* ═══ LIGHTBOX ═══ */
+        const lb = document.getElementById('lb'), lbi = document.getElementById('lbimg'), lbc = document.getElementById('lbc'), lbx = document.getElementById('lbx');
+        document.querySelectorAll('.gc img').forEach(img => img.addEventListener('click', () => {
+            lbi.src = img.src; lbc.textContent = img.dataset.cap || ''; lb.classList.add('on'); document.body.style.overflow = 'hidden';
+        }));
+        function clb() { lb.classList.remove('on'); document.body.style.overflow = '' }
+        lbx.addEventListener('click', clb); lb.addEventListener('click', e => { if (e.target === lb) clb() });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') clb() });
+
+        /* ═══ CHIPS ═══ */
+        const chips = document.querySelectorAll('.chip'), dA = document.getElementById('dA');
+        chips.forEach(c => c.addEventListener('click', () => {
+            chips.forEach(x => x.classList.remove('on')); c.classList.add('on');
+            const v = c.dataset.a; if (v === 'custom') { dA.value = ''; dA.focus() } else dA.value = v;
+        }));
+
+        /* ═══ DONATE → UPI PAYMENT ═══ */
+        const UPI_ID = '8248678722@nyes';
+        const UPI_NAME = 'Prasanth';
+
+        /* ── inject CSS once ── */
+        (function () {
+            if (document.getElementById('ps')) return;
+            const s = document.createElement('style'); s.id = 'ps';
+            s.textContent = `
+  /* overlay */
+  #pov{position:fixed;inset:0;z-index:99995;background:rgba(26,14,6,.9);
+    backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;
+    padding:1rem;opacity:0;transition:opacity .35s ease}
+  #pov.vis{opacity:1}
+  /* card */
+  #pbox{background:#fdfaf5;border-radius:22px;width:100%;max-width:430px;overflow:hidden;
+    box-shadow:0 36px 90px rgba(26,14,6,.55);transform:translateY(30px) scale(.96);
+    transition:transform .38s cubic-bezier(.4,0,.2,1),opacity .38s ease;opacity:0}
+  #pov.vis #pbox{transform:none;opacity:1}
+  /* processing screen */
+  #pspin{padding:3rem 2rem;text-align:center;display:flex;flex-direction:column;
+    align-items:center;gap:1rem}
+  .spin-ring{width:62px;height:62px;border:4px solid rgba(191,78,26,.15);
+    border-top-color:#bf4e1a;border-radius:50%;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .spin-txt{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:700;
+    color:#3d1f0d}
+  .spin-sub{font-size:.82rem;color:#6b4c34;font-weight:300}
+  .spin-dot{display:inline-block;animation:dotblink 1.2s ease infinite}
+  .spin-dot:nth-child(2){animation-delay:.2s}
+  .spin-dot:nth-child(3){animation-delay:.4s}
+  @keyframes dotblink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+  /* header */
+  #phead{background:linear-gradient(135deg,#3d1f0d 0%,#5c2e12 100%);
+    padding:1.4rem 1.8rem;text-align:center}
+  #phead .phi{font-size:2rem;margin-bottom:.3rem}
+  #phead h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;
+    color:#fff;margin:0 0 .2rem}
+  #phead .phn{font-size:.76rem;color:rgba(255,255,255,.5);font-weight:300}
+  /* amount */
+  #pamtb{background:linear-gradient(90deg,#bf4e1a,#e0622a);color:#fff;
+    font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:800;
+    padding:.55rem 2rem;text-align:center;letter-spacing:.02em}
+  /* body */
+  #pbody{padding:1.5rem 1.8rem 1rem}
+  /* QR */
+  #pqw{text-align:center;margin-bottom:1.1rem}
+  #pqw .pql{font-size:.68rem;color:#6b4c34;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;margin-bottom:.65rem}
+  #pqimg{width:170px;height:170px;border-radius:12px;border:3px solid #f8f0e4;
+    background:#f8f0e4;display:block;margin:0 auto}
+  #pqfb{font-size:.76rem;color:#bf4e1a;margin-top:.45rem;display:none}
+  /* UPI row */
+  #purow{display:flex;align-items:center;gap:.6rem;background:#f8f0e4;
+    border:1.5px dashed #c9963a;border-radius:10px;padding:.68rem 1rem;margin-bottom:.9rem}
+  #puid{flex:1;font-size:.88rem;font-weight:700;color:#3d1f0d;font-family:'Outfit',sans-serif;
+    letter-spacing:.02em;word-break:break-all}
+  #pcpy{background:#bf4e1a;color:#fff;border:none;border-radius:6px;padding:.36rem .8rem;
+    font-size:.7rem;font-weight:700;cursor:pointer;transition:all .25s;white-space:nowrap;
+    font-family:'Outfit',sans-serif}
+  #pcpy:hover{background:#8b2e0d}
+  #pcpy.ok{background:#2e7d32}
+  /* apps */
+  #paps{display:flex;justify-content:center;gap:.55rem;flex-wrap:wrap;margin:.6rem 0}
+  .pap{font-size:.67rem;font-weight:700;color:#5c2e12;background:#f0e8dc;
+    border-radius:6px;padding:.28rem .65rem;letter-spacing:.04em}
+  /* divider */
+  .pdiv{display:flex;align-items:center;gap:.6rem;margin:.75rem 0;
+    font-size:.68rem;font-weight:700;color:#c9963a;letter-spacing:.12em;text-transform:uppercase}
+  .pdiv::before,.pdiv::after{content:'';flex:1;height:1px;background:rgba(201,150,58,.28)}
+  /* pay anchor */
+  #ppbtn{display:block;width:100%;text-align:center;padding:.9rem 1rem;
+    background:linear-gradient(135deg,#bf4e1a,#e0622a);color:#fff;
+    border-radius:11px;font-size:.95rem;font-weight:700;text-decoration:none;
+    font-family:'Outfit',sans-serif;transition:all .3s;
+    box-shadow:0 6px 18px rgba(191,78,26,.38);letter-spacing:.03em}
+  #ppbtn:hover{background:linear-gradient(135deg,#8b2e0d,#bf4e1a);
+    transform:translateY(-2px);box-shadow:0 10px 28px rgba(191,78,26,.52)}
+  /* note */
+  #pnt{font-size:.73rem;color:#6b4c34;font-weight:300;text-align:center;
+    margin:.85rem 0 0;line-height:1.6}
+  #pnt b{color:#3d1f0d;font-weight:600}
+  /* footer */
+  #pft{display:flex;justify-content:center;padding:.9rem 1.8rem 1.4rem;
+    border-top:1px solid rgba(201,150,58,.14);margin-top:.6rem}
+  #pccl{background:transparent;border:1.5px solid rgba(61,31,13,.18);color:#6b4c34;
+    border-radius:8px;padding:.5rem 1.8rem;font-size:.8rem;cursor:pointer;
+    font-family:'Outfit',sans-serif;transition:all .3s}
+  #pccl:hover{border-color:#bf4e1a;color:#bf4e1a}
+  @media(max-width:480px){#pbox{border-radius:16px}#pbody{padding:1.2rem 1.2rem .8rem}}
+  `;
+            document.head.appendChild(s);
+        })();
+
+        /* ── open payment modal ── */
+        function openPayModal(donorName, amount) {
+            const amtFixed = parseFloat(amount).toFixed(2);
+            const amtFmt = parseFloat(amount).toLocaleString('en-IN');
+            const upiStr = 'upi://pay?pa=' + UPI_ID + '&pn=' + encodeURIComponent(UPI_NAME) + '&am=' + amtFixed + '&cu=INR&tn=' + encodeURIComponent('Donation - Adi Parampara');
+            const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=170x170&margin=6&data=' + encodeURIComponent(upiStr);
+
+            const ov = document.createElement('div'); ov.id = 'pov';
+            ov.innerHTML = `<div id="pbox">
+    <div id="phead">
+      <div class="phi">🙏</div>
+      <h3>Complete Your Donation</h3>
+      <div class="phn">Thank you, ${donorName}! Your generosity changes lives.</div>
+    </div>
+    <div id="pamtb">₹${amtFmt}</div>
+    <div id="pbody">
+      <div id="pqw">
+        <div class="pql">📱 Scan with any UPI app</div>
+        <img id="pqimg" src="${qrSrc}" alt="UPI QR Code"/>
+        <div id="pqfb">QR unavailable — use button below</div>
+      </div>
+      <div id="purow">
+        <div id="puid">${UPI_ID}</div>
+        <button id="pcpy" onclick="doCopy()">Copy ID</button>
+      </div>
+      <div id="paps">
+        <span class="pap">GPay</span><span class="pap">PhonePe</span>
+        <span class="pap">Paytm</span><span class="pap">BHIM</span>
+        <span class="pap">Amazon Pay</span>
+      </div>
+      <div class="pdiv">or open UPI app</div>
+      <a id="ppbtn" href="${upiStr}">📲 Pay ₹${amtFmt} — Open UPI App</a>
+      <div id="pnt">After payment, send screenshot to<br><b>info@adiparampara.org</b> &nbsp;·&nbsp; <b>+91 9676543210</b></div>
+    </div>
+    <div id="pft"><button id="pccl">Next ➔</button></div>
+  </div>`;
+            document.body.appendChild(ov);
+            requestAnimationFrame(() => requestAnimationFrame(() => ov.classList.add('vis')));
+
+            document.getElementById('pqimg').onerror = function () { this.style.display = 'none'; document.getElementById('pqfb').style.display = 'block'; };
+            const close = () => {
+                ov.remove();
+                const dps = document.getElementById('dProofSec');
+                dps.style.display = 'flex';
+                requestAnimationFrame(() => {
+                    dps.style.opacity = '1';
+                    dps.style.pointerEvents = 'all';
+                    dps.querySelector('div').style.transform = 'scale(1)';
+                });
+            };
+            document.getElementById('pccl').onclick = close;
+            ov.onclick = function (e) { if (e.target === ov) close(); };
+        }
+
+        /* ── copy UPI ID ── */
+        function doCopy() {
+            const b = document.getElementById('pcpy');
+            const done = () => {
+                b.textContent = '✓ Copied!'; b.classList.add('ok');
+                setTimeout(() => { b.textContent = 'Copy ID'; b.classList.remove('ok'); }, 2200);
+            };
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(UPI_ID).then(done).catch(done);
+            } else {
+                const t = document.createElement('textarea');
+                t.value = UPI_ID; t.style.cssText = 'position:fixed;opacity:0';
+                document.body.appendChild(t); t.select(); document.execCommand('copy');
+                document.body.removeChild(t); done();
+            }
+        }
+
+        /* ── main submit handler ── */
+        async function submitDonate() {
+            const n = val('dN'),
+                e = val('dE'),
+                p = val('dP'),
+                a = parseFloat(document.getElementById('dA').value),
+                pur = val('dPur'),
+                m = val('dM'),
+                msg = document.getElementById('donMsg'),
+                btn = document.getElementById('donBtn');
+
+            /* validation */
+            if (!n) return sm(msg, '⚠️ Please enter your full name.', 'err');
+            if (!ve(e)) return sm(msg, '⚠️ Please enter a valid email.', 'err');
+            if (!vp(p)) return sm(msg, '⚠️ Please enter a valid 10-digit phone number.', 'err');
+            if (!a || a < 1) return sm(msg, '⚠️ Please select or enter a donation amount.', 'err');
+            hm(msg);
+
+            /* 1. Show payment methods immediately */
+            openPayModal(n, a);
+
+            /* 2. Then store in Firebase in the background */
+            try {
+                if (typeof db !== 'undefined' && db) {
+                    db.collection('donations').add({
+                        name: n, email: e, phone: p, amount: a, purpose: pur, message: m,
+                        timestamp: new Date().toISOString(), status: 'initiated'
+                    });
+                }
+            } catch (_) { }
+        }
+
+        /* ── proof submission ── */
+        async function submitProof() {
+            const file = document.getElementById('dProof').files[0];
+            const msg = document.getElementById('donMsg');
+            const n = val('dN'), e = val('dE'); 
+
+            if (!file) return sm(msg, '⚠️ Please select a payment screenshot first.', 'err');
+
+            const btn = document.querySelector('#dProofSec button');
+            btn.disabled = true; btn.textContent = '⏳ Uploading…';
+            hm(msg);
+
+            try {
+                let url = '';
+                if (typeof storage !== 'undefined') {
+                    const ref = storage.ref(`proofs/${Date.now()}_${file.name}`);
+                    await ref.put(file);
+                    url = await ref.getDownloadURL();
+                }
+
+                if (typeof db !== 'undefined' && db) {
+                    await db.collection('payment_proofs').add({
+                        donorName: n,
+                        donorEmail: e,
+                        fileName: file.name,
+                        photoURL: url,
+                        timestamp: new Date().toISOString(),
+                        status: 'awaiting_verification'
+                    });
+                }
+
+                const dps = document.getElementById('dProofSec');
+                dps.innerHTML = `
+                    <div style="background:var(--white);border-radius:20px;padding:4rem 2rem;width:min(450px,92%);text-align:center;box-shadow:0 30px 100px rgba(0,0,0,0.5)">
+                        <div style="font-size:4.5rem;margin-bottom:1.5rem">🏆</div>
+                        <h2 class="h2" style="font-size:2rem;color:var(--ink)">Donation Successful!</h2>
+                        <p style="color:var(--ink3);margin-top:1rem;margin-bottom:2rem">Thank you for your generous support. Your payment proof has been received, and we will send your 80G receipt shortly.</p>
+                        <button class="btn btn-p" onclick="location.reload()">Finish</button>
+                    </div>
+                `;
+            } catch (err) {
+                console.error(err);
+                sm(msg, '❌ Error: ' + err.message, 'err');
+                btn.disabled = false; btn.textContent = 'Submit Receipt →';
+            }
+        }
+
+
+        /* ═══ CONTACT ═══ */
+        async function submitContact() {
+            const n = val('cN'), e = val('cE'), s = val('cS'), mb = val('cMb'),
+                msg = document.getElementById('conMsg'), btn = document.querySelector('#contact .btn');
+            if (!n) return sm(msg, 'Please enter your name.', 'err');
+            if (!ve(e)) return sm(msg, 'Please enter a valid email.', 'err');
+            if (!mb) return sm(msg, 'Please write a message.', 'err');
+            btn.disabled = true; btn.textContent = '⏳ Sending…'; hm(msg);
+            try {
+                if (db) await db.collection('messages').add({ name: n, email: e, subject: s, message: mb, timestamp: new Date().toISOString() });
+                else await w(900);
+                sm(msg, `✅ Message sent! We'll reply to ${e} within 24 hours.`, 'ok');
+                ['cN', 'cE', 'cS', 'cMb'].forEach(id => document.getElementById(id).value = '');
+            } catch (err) { sm(msg, '❌ Failed. Email info@helparea.org directly.', 'err') }
+            finally { btn.disabled = false; btn.textContent = 'Send Message →' }
+        }
+
+        /* ═══ NEWSLETTER ═══ */
+        async function subNL() {
+            const e = document.getElementById('nlE').value.trim(), m = document.getElementById('nlmsg');
+            m.style.display = 'none';
+            if (!ve(e)) { m.textContent = '⚠️ Please enter a valid email.'; m.style.display = 'block'; return }
+            try {
+                if (db) await db.collection('newsletter').add({ email: e, timestamp: new Date().toISOString() });
+                else await w(700);
+                m.textContent = '✅ Subscribed! Welcome to our community.'; m.style.display = 'block';
+                document.getElementById('nlE').value = '';
+            } catch (err) { m.textContent = '❌ Could not subscribe. Try again.'; m.style.display = 'block' }
+        }
+
+        /* ═══ HELPERS ═══ */
+        function val(id) { return document.getElementById(id)?.value?.trim() || '' }
+        function sm(el, t, type) { el.textContent = t; el.className = `fmsg ${type}` }
+        function hm(el) { el.className = 'fmsg'; el.textContent = '' }
+        function ve(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) }
+        function vp(p) { return /^[6-9]\d{9}$/.test(p.replace(/[\s\-\+]/g, '')) }
+        function w(ms) { return new Promise(r => setTimeout(r, ms)) }
+
+        updA(); runc();
+    </script>
+    <script src="chatbot.js"></script>
+</body>
+
+</html>

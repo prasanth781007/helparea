@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpArea – Your Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --clay: #bf4e1a;
+            --soil: #3d1f0d;
+            --gold: #c9963a;
+            --sand: #f8f0e4;
+            --white: #fff;
+            --text: #1a0e06;
+            --ink3: rgba(26, 14, 6, 0.6);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Outfit', sans-serif; background: var(--sand); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+
+        .profile-container { background: var(--white); width: 100%; max-width: 500px; border-radius: 24px; box-shadow: 0 40px 100px rgba(0,0,0,0.1); padding: 3rem 2.5rem; text-align: center; }
+        
+        .pic-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 1.5rem; }
+        .pic-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--gold); padding: 5px; background: white; }
+        .pic-edit { position: absolute; bottom: 0; right: 0; background: var(--clay); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; cursor: pointer; font-size: 1.1rem; }
+
+        .profile-header h1 { font-size: 1.8rem; color: var(--soil); margin-bottom: 0.3rem; }
+        .profile-header p { font-size: 0.9rem; color: var(--ink3); margin-bottom: 2rem; }
+
+        .form-group { text-align: left; margin-bottom: 1.5rem; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #666; }
+        input { width: 100%; padding: 1rem; border: 1.5px solid var(--sand); background: var(--sand); border-radius: 12px; outline: none; font-family: inherit; font-size: 1rem; transition: 0.3s; }
+        input:focus { border-color: var(--gold); background: white; }
+        input:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .btn-set { display: flex; gap: 1rem; margin-top: 2rem; }
+        .btn { flex: 1; padding: 1.1rem; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.3s; border: none; }
+        .btn-p { background: var(--clay); color: white; box-shadow: 0 10px 20px rgba(191,78,26,0.2); }
+        .btn-s { background: var(--sand); color: var(--soil); }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        .msg { margin-top: 1.5rem; font-size: 0.9rem; padding: 1rem; border-radius: 10px; display: none; }
+        .msg.ok { background: #e8f5e9; color: #2e7d32; }
+        .msg.err { background: #ffebee; color: #b71c1c; }
+
+        .back-home { display: block; margin-top: 2rem; color: var(--gold); text-decoration: none; font-weight: 600; font-size: 0.85rem; }
+
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+        <div class="pic-wrapper">
+            <img id="p-pic" src="https://via.placeholder.com/120" alt="Profile">
+            <label for="p-file" class="pic-edit">✏️</label>
+            <input type="file" id="p-file" accept="image/*" hidden onchange="uploadPic(this)">
+        </div>
+        
+        <div class="profile-header">
+            <h1 id="p-name-disp">Your Name</h1>
+            <p id="p-email-disp">your@email.com</p>
+        </div>
+
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="p-name" placeholder="John Doe">
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="p-phone" placeholder="+91 98765-43210">
+        </div>
+
+        <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="p-email" disabled>
+        </div>
+
+        <input type="hidden" id="p-url">
+
+        <div class="btn-set">
+            <button class="btn btn-s" onclick="location.href='index.html'">Cancel</button>
+            <button class="btn btn-p" onclick="saveProfile()" id="saveBtn">Save Changes →</button>
+        </div>
+
+        <div id="p-msg" class="msg"></div>
+
+        <a href="index.html" class="back-home">← Back to website</a>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+    <!-- HELP AREA CONFIG -->
+    <script src="firebase-config.js"></script>
+
+    <script>
+        // Load Profile
+        firebase.auth().onAuthStateChanged(async user => {
+            if (user) {
+                document.getElementById('p-pic').src = user.photoURL || 'https://via.placeholder.com/120';
+                document.getElementById('p-name-disp').textContent = user.displayName || 'Unnamed User';
+                document.getElementById('p-email-disp').textContent = user.email;
+                document.getElementById('p-name').value = user.displayName || '';
+                document.getElementById('p-url').value = user.photoURL || '';
+                document.getElementById('p-email').value = user.email;
+
+                // Load extra data from Firestore
+                const doc = await db.collection('users').doc(user.uid).get();
+                if (doc.exists) {
+                    document.getElementById('p-phone').value = doc.data().phone || '';
+                }
+            } else { location.href = 'login.html'; }
+        });
+
+        async function uploadPic(input) {
+            const file = input.files[0];
+            if(!file) return;
+            const u = firebase.auth().currentUser;
+            const msg = document.getElementById('p-msg');
+            const ref = firebase.storage().ref(`profiles/${u.uid}`);
+
+            msg.textContent = '🖼️ Uploading your photo...';
+            msg.className = 'msg ok';
+            msg.style.display = 'block';
+
+            try {
+                await ref.put(file);
+                const url = await ref.getDownloadURL();
+                document.getElementById('p-url').value = url;
+                document.getElementById('p-pic').src = url;
+                msg.textContent = '✅ Photo uploaded! Click "Save Changes" to apply.';
+                setTimeout(() => msg.style.display = 'none', 3000);
+            } catch (err) {
+                console.error(err);
+                msg.textContent = '❌ Upload failed: ' + err.message;
+                msg.className = 'msg err';
+                msg.style.display = 'block';
+            }
+        }
+
+        async function saveProfile() {
+            const user = firebase.auth().currentUser;
+            const newName = document.getElementById('p-name').value;
+            const newPhone = document.getElementById('p-phone').value;
+            const newUrl = document.getElementById('p-url').value;
+            const btn = document.getElementById('saveBtn');
+            const msg = document.getElementById('p-msg');
+
+            btn.disabled = true; btn.textContent = 'Updating…';
+            msg.style.display = 'none';
+
+            try {
+                // 1. Update Auth Profile
+                await user.updateProfile({ displayName: newName, photoURL: newUrl });
+                
+                // 2. Update Firestore Record
+                await db.collection('users').doc(user.uid).set({ 
+                    name: newName, 
+                    email: user.email,
+                    photoURL: newUrl, 
+                    phone: newPhone,
+                    lastUpdated: new Date() 
+                }, { merge: true });
+
+                msg.textContent = '✅ Profile updated successfully!';
+                msg.className = 'msg ok';
+                msg.style.display = 'block';
+                
+                // Update header display instantly
+                document.getElementById('p-name-disp').textContent = newName;
+                
+                setTimeout(() => { msg.style.display = 'none'; btn.disabled = false; btn.textContent = 'Save Changes →'; }, 2000);
+            } catch (err) {
+                console.error(err);
+                msg.textContent = '❌ Error: ' + err.message;
+                msg.className = 'msg err';
+                msg.style.display = 'block';
+                btn.disabled = false; btn.textContent = 'Save Changes →';
+            }
+        }
+    </script>
+</body>
+</html>

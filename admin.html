@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpArea – Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --clay: #bf4e1a;
+            --soil: #3d1f0d;
+            --gold: #c9963a;
+            --sand: #f8f0e4;
+            --white: #fff;
+            --gray: #f4f4f4;
+            --text: #1a0e06;
+            --success: #2e7d32;
+            --error: #b71c1c;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Outfit', sans-serif; background: var(--sand); color: var(--text); display: flex; min-height: 100vh; }
+
+        aside { width: 260px; background: var(--soil); color: white; display: flex; flex-direction: column; padding: 2rem 1rem; position: fixed; height: 100vh; }
+        .logo { font-size: 1.5rem; font-weight: 700; margin-bottom: 3rem; text-align: center; color: var(--gold); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
+        .nav-btn { background: none; border: none; color: rgba(255,255,255,0.6); width: 100%; text-align: left; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; font-size: 1rem; display: flex; align-items: center; gap: 0.8rem; transition: all 0.3s; }
+        .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.1); color: white; }
+        .nav-btn.active { color: var(--gold); }
+
+        main { flex: 1; margin-left: 260px; padding: 2.5rem; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .stat-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .stat-card h3 { font-size: 0.85rem; text-transform: uppercase; color: #666; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .stat-card p { font-size: 2rem; font-weight: 700; color: var(--clay); }
+
+        .table-container { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        thead { background: var(--clay); color: white; }
+        th, td { padding: 1.2rem; border-bottom: 1px solid var(--gray); font-size: 0.9rem; }
+        tr:hover { background: var(--gray); }
+        .badge { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .badge-pending { background: #fff3e0; color: #ef6c00; }
+        .badge-verified { background: #e8f5e9; color: var(--success); }
+        .badge-info { background: #e3f2fd; color: #1565c0; }
+
+        .btn-action { padding: 0.4rem 0.8rem; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin-right: 0.3rem; transition: 0.3s; }
+        .btn-verify { background: var(--success); color: white; }
+        .btn-delete { background: var(--error); color: white; }
+        .btn-verify:hover { opacity: 0.8; }
+
+        #loginOverlay { position: fixed; inset: 0; background: var(--soil); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+        .login-box { background: white; padding: 3rem; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; }
+        .login-box h2 { margin-bottom: 1.5rem; color: var(--soil); }
+        .login-box input { width: 100%; padding: 1rem; margin-bottom: 1.5rem; border: 1.5px solid var(--gray); border-radius: 8px; outline: none; }
+        .login-box button { width: 100%; padding: 1rem; background: var(--clay); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+
+    </style>
+</head>
+<body>
+
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2>🔐 NGO Admin Login</h2>
+            <input type="email" id="adminEmail" placeholder="Admin Email (e.g. info@...)" style="width:100%; padding:1rem; margin-bottom:1rem; border:1.5px solid var(--gray); border-radius:8px; outline:none;">
+            <input type="password" id="adminPass" placeholder="Enter Admin Password...">
+            <button onclick="checkPass()">Access Dashboard</button>
+            <p id="loginError" style="color:var(--error); margin-top:1.2rem; display:none; font-size:0.9rem; font-weight:600">❌ Invalid Admin Credentials</p>
+        </div>
+    </div>
+
+    <aside>
+        <div class="logo">HelpArea</div>
+        <button class="nav-btn active" onclick="showTab('donations')">💰 Donations</button>
+        <button class="nav-btn" onclick="showTab('proofs')">📸 Proofs</button>
+        <button class="nav-btn" onclick="showTab('messages')">✉️ Messages</button>
+        <button class="nav-btn" onclick="showTab('newsletter')">📧 Newsletter</button>
+        <button class="nav-btn" onclick="logout()">🚪 Logout</button>
+    </aside>
+
+    <main>
+        <header>
+            <h1 id="tabTitle">💰 Donation Management</h1>
+            <button onclick="location.reload()" style="background:none; border:none; color:var(--clay); cursor:pointer; font-weight:600">🔄 Refresh Data</button>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card"><h3>Total Donations</h3><p id="statCount">0</p></div>
+            <div class="stat-card"><h3>Awaiting Proof</h3><p id="statPending">0</p></div>
+            <div class="stat-card"><h3>Total Revenue</h3><p id="statTotal">₹0</p></div>
+        </div>
+
+        <div class="table-container">
+            <table id="dataTable">
+                <thead id="tableHead"></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <!-- HELP AREA FIREBASE CONFIG -->
+    <script src="firebase-config.js"></script>
+
+    <script>
+        let currentTab = 'donations';
+
+        function checkPass() {
+            const email = document.getElementById('adminEmail').value;
+            const pass = document.getElementById('adminPass').value;
+            
+            // Official Admin Credentials
+            const ADMIN_EMAIL = "info@helparea.org";
+            const ADMIN_PASS = "admin123";
+
+            if (email === ADMIN_EMAIL && pass === ADMIN_PASS) { 
+                document.getElementById('loginOverlay').style.display = 'none';
+                localStorage.setItem('adminLoggedIn', 'true');
+                loadData();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        window.onload = () => {
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                loadData();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            location.reload();
+        }
+
+        function showTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            if(event) event.target.closest('.nav-btn').classList.add('active');
+            
+            const titles = { 
+                donations: '💰 Donation Management', 
+                proofs: '📸 Payment Proofs', 
+                messages: '✉️ Contact Messages',
+                newsletter: '📧 Newsletter Subscribers'
+            };
+            document.getElementById('tabTitle').textContent = titles[tab];
+            loadData();
+        }
+
+        async function loadData() {
+            const body = document.getElementById('tableBody');
+            const head = document.getElementById('tableHead');
+            body.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:3rem">Loading data from Firebase...</td></tr>';
+
+            try {
+                // Map Tab ID to actual Firestore Collection Name
+                const collName = currentTab === 'proofs' ? 'payment_proofs' : currentTab;
+                
+                const snapshot = await db.collection(collName).orderBy('timestamp', 'desc').get();
+                const docs = snapshot.docs;
+                
+                if (docs.length === 0) {
+                    body.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:3rem; color:#888">No records found in this category.</td></tr>';
+                    return;
+                }
+                
+                body.innerHTML = '';
+                
+                if (currentTab === 'donations') {
+                    head.innerHTML = '<tr><th>Date</th><th>Name</th><th>Email</th><th>Amount</th><th>Purpose</th><th>Status</th><th>Actions</th></tr>';
+                    let total = 0; docs.forEach(doc => {
+                        const data = doc.data(); 
+                        total += parseFloat(data.amount || 0);
+                        body.innerHTML += `
+                            <tr>
+                                <td>${new Date(data.timestamp).toLocaleDateString()}</td>
+                                <td>${data.name}</td>
+                                <td>${data.email}</td>
+                                <td>₹${data.amount}</td>
+                                <td><span class="badge badge-info">${data.purpose || 'General'}</span></td>
+                                <td><span class="badge ${data.status === 'verified' ? 'badge-verified' : 'badge-pending'}">${data.status}</span></td>
+                                <td>
+                                    <button class="btn-action btn-verify" onclick="updateStatus('donations', '${doc.id}', 'verified')">Tick</button>
+                                    <button class="btn-action" style="background:#444; color:white; margin-left:5px" onclick="viewProofFor('${data.email}')">👁️ Proof</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    document.getElementById('statCount').textContent = docs.length;
+                    document.getElementById('statTotal').textContent = '₹' + total.toLocaleString('en-IN');
+                } 
+                else if (currentTab === 'proofs') {
+                    head.innerHTML = '<tr><th>Date</th><th>Donor</th><th>Email</th><th>File Name</th><th>Preview</th><th>Status</th><th>Actions</th></tr>';
+                    docs.forEach(doc => {
+                        const data = doc.data();
+                        body.innerHTML += `
+                            <tr>
+                                <td>${new Date(data.timestamp).toLocaleDateString()}</td>
+                                <td>${data.donorName}</td>
+                                <td>${data.donorEmail}</td>
+                                <td style="color:var(--clay)">📄 ${data.fileName}</td>
+                                <td><button class="btn-action" style="background:#444; color:white;" onclick="openPreview('${data.photoURL}')">👁️ View Original</button></td>
+                                <td><span class="badge ${data.status === 'verified' ? 'badge-verified' : 'badge-pending'}">${data.status}</span></td>
+                                <td><button class="btn-action btn-verify" onclick="updateStatus('payment_proofs', '${doc.id}', 'verified')">Approve</button></td>
+                            </tr>
+                        `;
+                    });
+                }
+                else if (currentTab === 'messages') {
+                    head.innerHTML = '<tr><th>Date</th><th>From</th><th>Subject</th><th>Message</th></tr>';
+                    docs.forEach(doc => {
+                        const data = doc.data();
+                        body.innerHTML += `
+                            <tr>
+                                <td>${new Date(data.timestamp).toLocaleDateString()}</td>
+                                <td><b>${data.name}</b><br>${data.email}</td>
+                                <td>${data.subject}</td>
+                                <td>${data.message}</td>
+                            </tr>
+                        `;
+                    });
+                }
+                else if (currentTab === 'newsletter') {
+                    head.innerHTML = '<tr><th>Join Date</th><th>Subscriber Email</th></tr>';
+                    docs.forEach(doc => {
+                        const data = doc.data();
+                        body.innerHTML += `
+                            <tr>
+                                <td>${new Date(data.timestamp).toLocaleDateString()}</td>
+                                <td>${data.email}</td>
+                            </tr>
+                        `;
+                    });
+                }
+            } catch (err) {
+                console.error("Firebase Error:", err);
+                body.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:3rem; color:var(--error)">❌ Data Load Failed: ${err.message}. Check console for details.</td></tr>`;
+            }
+        }
+
+        async function updateStatus(coll, id, status) {
+            await db.collection(coll).doc(id).update({ status: status });
+            alert('Updated Successfully!');
+            loadData();
+        }
+        async function viewProofFor(email) {
+            try {
+                const snap = await db.collection('payment_proofs').where('donorEmail', '==', email).limit(1).get();
+                if (snap.empty) {
+                    alert(`No proof found yet for ${email}. ⏳`);
+                } else {
+                    const data = snap.docs[0].data();
+                    openPreview(data.photoURL);
+                }
+            } catch (err) {
+                alert("❌ Error finding proof: " + err.message);
+            }
+        }
+
+        async function updateStatus(coll, id, status) {
+            if(!confirm(`Verify this record as ${status}?`)) return;
+            try {
+                await db.collection(coll).doc(id).update({ status: status });
+                alert("✅ Record verified successfully!");
+                loadData();
+            } catch (err) {
+                alert("❌ Verification failed: " + err.message);
+            }
+        }
+
+        function openPreview(url) {
+            if(!url) return alert("❌ No original image available for this record.");
+            document.getElementById('previewImg').src = url;
+            document.getElementById('previewOverlay').style.display = 'flex';
+        }
+
+        function closePreview() {
+            document.getElementById('previewOverlay').style.display = 'none';
+        }
+    </script>
+
+    <!-- PREVIEW OVERLAY -->
+    <div id="previewOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; display:none; align-items:center; justify-content:center; flex-direction:column; padding:2rem">
+        <button onclick="closePreview()" style="position:absolute; top:20px; right:20px; background:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:700">CLOSE [X]</button>
+        <img id="previewImg" src="" style="max-width:100%; max-height:85vh; border-radius:15px; box-shadow:0 10px 50px rgba(255,255,255,0.1)">
+        <p style="color:white; margin-top:1.5rem; letter-spacing:0.05em">Payment Proof Original Copy 📄</p>
+    </div>
+</body>
+</html>
+</body>
+</html>
